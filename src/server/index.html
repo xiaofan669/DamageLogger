@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DamageLogger</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+			justify-content: flex-start;
+			min-height: 100vh;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            gap: 15px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* 图表容器样式调整 */
+        .dashboard .chart-container {
+            flex: 1 1 calc(38% - 10px);
+            min-width: 250px;
+        }
+
+        .chart-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            flex: 1;
+            min-width: 450px;
+        }
+
+        #damageChart {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #summaryBox {
+            background: linear-gradient(135deg, #2b3252, #0f1642);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+            flex: 0 0 20%;
+        }
+
+        .summary-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .attacker {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            position: relative;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .attacker:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 12px;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .attacker-name {
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .damage-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+        }
+
+        .damage-percentage {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .damage-value {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2b3252;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin-top: 0;
+        }
+
+        /* 伤害历史记录样式 */
+        .damage-history-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .history-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2b3252;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .damage-history-content {
+            padding-right: 10px;
+        }
+
+        .damage-record {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background-color 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .damage-record:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .damage-record:last-child {
+            border-bottom: none;
+        }
+
+        .damage-record[data-new-turn="true"] {
+            margin-top: 10px;
+        }
+
+        .record-turn {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-right: 15px;
+            min-width: 60px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.03);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .record-avatar {
+            font-weight: 600;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .record-avatar .avatar-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        .record-damage {
+            margin-left: auto;
+            font-weight: 600;
+            color: #e74c3c;
+        }
+
+        @media (max-width: 1000px) and (min-width: 769px) {
+            .dashboard {
+                flex-wrap: wrap;
+            }
+
+            .dashboard .chart-container {
+                flex: 1 1 45%;
+                min-width: 300px;
+            }
+
+            #summaryBox {
+                flex: 1 1 100%;
+                margin-top: 15px;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .dashboard .chart-container,
+            #summaryBox {
+                flex: 1 1 100%;
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .damage-history-container {
+                width: calc(100% - 40px);
+            }
+
+            .damage-record {
+                flex-wrap: wrap;
+            }
+
+            .record-turn {
+                width: auto;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 15px;">
+        <a href="https://space.bilibili.com/490578176" target="_blank" style="color: red; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+            <svg width="28" height="28" viewBox="0 0 1024 1024" style="margin-right: 8px;">
+                <path fill="currentColor" d="M306.005333 117.632L444.330667 256h135.296l138.368-138.325333a42.666667 42.666667 0 0 1 60.373333 60.373333L700.330667 256H789.333333A149.333333 149.333333 0 0 1 938.666667 405.333333v341.333334a149.333333 149.333333 0 0 1-149.333334 149.333333h-554.666666A149.333333 149.333333 0 0 1 85.333333 746.666667v-341.333334A149.333333 149.333333 0 0 1 234.666667 256h88.96L245.632 177.962667a42.666667 42.666667 0 0 1 60.373333-60.373334zM789.333333 341.333333h-554.666666a64 64 0 0 0-63.701334 57.856L170.666667 405.333333v341.333334a64 64 0 0 0 57.856 63.701333L234.666667 810.666667h554.666666a64 64 0 0 0 63.701334-57.856L853.333333 746.666667v-341.333334A64 64 0 0 0 789.333333 341.333333zM341.333333 469.333333a42.666667 42.666667 0 0 1 42.666667 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666666-42.666667z m341.333334 0a42.666667 42.666667 0 0 1 42.666666 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666667-42.666667z"></path>
+            </svg>
+            BiliBili: NuShen. Welcome to use HSR DamageLogger!(Click to pages)
+        </a>
+    </div>
+
+    <div class="dashboard">
+        <div class="chart-container">
+            <canvas id="damageChart" width="380" height="380"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="damageBarChart" width="380" height="380"></canvas>
+        </div>
+        <div id="summaryBox">
+            <div class="summary-title">Damage Summary</div>
+            <div id="summaryContent" class="no-data">No data recorded yet</div>
+        </div>
+    </div>
+
+    <!-- DamageTurn-->
+    <div class="damage-history-container">
+        <div class="history-title">TurnDamageHistory</div>
+        <div id="damageHistory" class="damage-history-content">
+            <div class="no-data">No Damage</div>
+        </div>
+    </div>
+
+    <script>
+        // Chart configuration
+        const ctx = document.getElementById('damageChart').getContext('2d');
+        const colors = [
+            'rgba(255, 99, 132, 0.85)',
+            'rgba(54, 162, 235, 0.85)',
+            'rgba(255, 206, 86, 0.85)',
+            'rgba(75, 192, 192, 0.85)',
+            'rgba(153, 102, 255, 0.85)',
+            'rgba(255, 159, 64, 0.85)',
+            'rgba(46, 204, 113, 0.85)',
+            'rgba(192, 57, 43, 0.85)',
+            'rgba(155, 89, 182, 0.85)'
+        ];
+
+        // Pie
+        const damageChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: colors,
+                    borderColor: 'white',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                family: "'Segoe UI', sans-serif"
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Damage Distribution',
+                        font: {
+                            size: 18,
+                            weight: 'bold',
+                            family: "'Segoe UI', sans-serif"
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                const damage = Math.round(context.parsed);
+                                label += damage.toLocaleString() + ' damage';
+
+                                // Add percentage info
+                                const totalDamage = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((damage / totalDamage) * 100).toFixed(1);
+                                label += ` (${percentage}%)`;
+
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Bar
+        const barCtx = document.getElementById('damageBarChart').getContext('2d');
+        const damageBarChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Damage',
+                    data: [],
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'x',
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Damage Bar',
+                        font: {
+                            size: 18,
+                            weight: 'bold',
+                            family: "'Segoe UI', sans-serif"
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 20
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const damage = Math.round(context.parsed.y);
+                                return `${damage.toLocaleString()} damage`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return Math.round(value).toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // SSE connection
+        const source = new EventSource('http://localhost:21500/events');
+        const damageData = new Map(); // Track total damage by attacker
+        const colorMap = new Map(); // Track colors by attacker
+        const damageHistory = []; // Array to store damage history records
+        const MAX_HISTORY_RECORDS = 1000; // Maximum number of history records to keep
+
+        // Track current turn damage
+        const currentTurnDamage = new Map();
+        let currentTurn = 0;
+
+        // Update damage
+        function updateDamageHistory() {
+            const historyContent = document.getElementById('damageHistory');
+
+            if (damageHistory.length === 0) {
+                historyContent.innerHTML = '<div class="no-data">No Damage</div>';
+                return;
+            }
+
+            // Sort
+            const sortedHistory = [...damageHistory].sort((a, b) => {
+                // 1 -> 2
+                if (a.turn !== b.turn) {
+                    return a.turn - b.turn;
+                }
+                // 2 -> 1
+                return b.damage - a.damage;
+            });
+
+            let historyHTML = '';
+
+            let lastTurn = null;
+            for (const record of sortedHistory) {
+                const color = colorMap.get(record.attacker) || '#999';
+                const isNewTurn = lastTurn !== record.turn;
+                lastTurn = record.turn;
+
+                historyHTML += `
+                    <div class="damage-record" ${isNewTurn ? 'data-new-turn="true"' : ''}>
+                        <span class="record-turn">Turn ${record.turn || '?'}</span>
+                        <div class="record-avatar">
+                            <span class="avatar-color" style="background-color: ${color}"></span>
+                            ${record.attacker}
+                        </div>
+                        <span class="record-damage">${Math.round(record.damage).toLocaleString()} Damage</span>
+                    </div>
+                `;
+            }
+
+            historyContent.innerHTML = historyHTML;
+        }
+
+        function addTurnDamage(attacker, damage) {
+            if (currentTurnDamage.has(attacker)) {
+                currentTurnDamage.set(attacker, currentTurnDamage.get(attacker) + damage);
+            } else {
+                currentTurnDamage.set(attacker, damage);
+            }
+        }
+
+        // TurnEnd handle
+        function recordTurnDamage() {
+            // All turn damage
+            for (const [attacker, damage] of currentTurnDamage.entries()) {
+                if (damage > 0) {
+                    damageHistory.push({
+                        turn: currentTurn,
+                        attacker: attacker,
+                        damage: Math.round(damage)
+                    });
+                }
+            }
+
+            while (damageHistory.length > MAX_HISTORY_RECORDS) {
+                damageHistory.shift();
+            }
+
+            updateDamageHistory();
+            currentTurnDamage.clear();
+        }
+
+        function updateSummaryBox() {
+            const totalDamage = Array.from(damageData.values()).reduce((sum, val) => sum + val, 0);
+            const summaryContent = document.getElementById('summaryContent');
+
+            if (damageData.size === 0) {
+                summaryContent.innerHTML = '<div class="no-data">No data recorded yet</div>';
+                return;
+            }
+
+            // Sort attackers by damage (highest first)
+            const sortedAttackers = Array.from(damageData.entries())
+                .sort((a, b) => b[1] - a[1]);
+
+            let summaryHTML = '';
+
+            sortedAttackers.forEach(([attacker, damage]) => {
+                const percentage = totalDamage > 0 ? ((damage / totalDamage) * 100).toFixed(1) : 0;
+                const color = colorMap.get(attacker);
+
+                const damageDisplay = damage > 0 ? `${Math.round(damage).toLocaleString()} dmg` : '0 dmg';
+
+                summaryHTML += `
+                    <div class="attacker">
+                        <span class="color-dot" style="background-color: ${color}"></span>
+                        <span class="attacker-name">${attacker}</span>
+                        <div class="damage-stats">
+                            <span class="damage-percentage">${percentage}%</span>
+                            <span class="damage-value">${damageDisplay}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            summaryContent.innerHTML = summaryHTML;
+        }
+
+        // Flag to track if battle has ended
+        let battleEnded = false;
+
+        source.onmessage = function(event) {
+            const eventData = JSON.parse(event.data);
+
+            // Get Lineup
+            if (eventData.type === 'SetBattleLineup') {
+                const avatars = eventData.data.avatars;
+
+                if (battleEnded || avatars.length > 4) {
+                    damageData.clear();
+                    colorMap.clear();
+                    damageHistory.length = 0;
+                    currentTurnDamage.clear();
+                    currentTurn = 0;
+                    updateDamageHistory();
+                    battleEnded = false;
+                }
+
+                // Initialize all players with zero damage
+                avatars.forEach((avatar, index) => {
+                    const playerName = avatar.name;
+
+                    // Assign color to each player
+                    if (!colorMap.has(playerName)) {
+                        colorMap.set(playerName, colors[index % colors.length]);
+                    }
+
+                    // Initialize with zero damage
+                    if (!damageData.has(playerName)) {
+                        damageData.set(playerName, 0);
+                    }
+                });
+
+                // Update charts with all players
+                const labels = Array.from(damageData.keys());
+                const data = Array.from(damageData.values());
+                const backgroundColors = labels.map(k => colorMap.get(k));
+                const borderColors = backgroundColors.map(color => color.replace('0.85', '1'));
+
+                // Update pie chart
+                damageChart.data.labels = labels;
+                damageChart.data.datasets[0].data = data;
+                damageChart.data.datasets[0].backgroundColor = backgroundColors;
+                damageChart.update();
+
+                // Update bar chart
+                damageBarChart.data.labels = labels;
+                damageBarChart.data.datasets[0].data = data;
+                damageBarChart.data.datasets[0].backgroundColor = backgroundColors;
+                damageBarChart.data.datasets[0].borderColor = borderColors;
+                damageBarChart.update();
+
+                // Update summary box
+                updateSummaryBox();
+            }
+
+            // Handle turn begin event
+            else if (eventData.type === 'TurnBegin') {
+                // Increment turn counter
+                currentTurn++;
+                console.log(`Turn ${currentTurn} begins`);
+            }
+
+            // Handle turn end event
+            else if (eventData.type === 'TurnEnd') {
+                console.log(`Turn ${currentTurn} ends with data:`, eventData.data);
+                const avatars = eventData.data.avatars;
+                const avatarsDamage = eventData.data.avatars_damage;
+
+                currentTurnDamage.clear();
+
+                // Add all avatar data
+                for (let i = 0; i < avatars.length; i++) {
+                    const avatar = avatars[i];
+                    const damage = Math.round(avatarsDamage[i]);
+
+                    if (damage > 0) {
+                        currentTurnDamage.set(avatar.name, damage);
+                    }
+                }
+
+                if (currentTurnDamage.size > 0) {
+                    recordTurnDamage();
+                }
+            }
+
+            // Update damage when damage event is received
+            else if (eventData.type === 'OnDamage') {
+                const attacker = eventData.data.attacker.name;
+                const damage = Math.round(eventData.data.damage);
+
+                console.log(`Damage event: ${attacker} dealt ${damage} damage`);
+
+                // Assign color if new attacker (shouldn't happen normally since lineup is initialized)
+                if (!colorMap.has(attacker)) {
+                    colorMap.set(attacker, colors[colorMap.size % colors.length]);
+                }
+
+                // Update total damage data
+                if (damageData.has(attacker)) {
+                    damageData.set(attacker, damageData.get(attacker) + damage);
+                } else {
+                    damageData.set(attacker, damage);
+                }
+
+                // Update charts
+                const labels = Array.from(damageData.keys());
+                const data = Array.from(damageData.values());
+                const backgroundColors = labels.map(k => colorMap.get(k));
+                const borderColors = backgroundColors.map(color => color.replace('0.85', '1'));
+
+                // Update pie chart
+                damageChart.data.labels = labels;
+                damageChart.data.datasets[0].data = data;
+                damageChart.data.datasets[0].backgroundColor = backgroundColors;
+                damageChart.update();
+
+                // Update bar chart
+                damageBarChart.data.labels = labels;
+                damageBarChart.data.datasets[0].data = data;
+                damageBarChart.data.datasets[0].backgroundColor = backgroundColors;
+                damageBarChart.data.datasets[0].borderColor = borderColors;
+                damageBarChart.update();
+
+                // Update summary box
+                updateSummaryBox();
+            }
+
+            // Handle battle end event
+            else if (eventData.type === 'BattleEnd') {
+                console.log('Battle ended with data:', eventData.data);
+
+                if (currentTurnDamage.size > 0) {
+                    recordTurnDamage();
+                }
+
+                // Set battle ended
+                battleEnded = true;
+
+                // keep visible
+                const summaryContent = document.getElementById('summaryContent');
+                const finalStatsHeader = document.createElement('div');
+                finalStatsHeader.className = 'summary-title';
+                finalStatsHeader.style.marginTop = '15px';
+                finalStatsHeader.style.color = '#ffcc00';
+                finalStatsHeader.textContent = 'BattleEnded - Final Damage';
+
+                if (summaryContent.firstChild) {
+                    summaryContent.insertBefore(finalStatsHeader, summaryContent.firstChild);
+                }
+
+                console.log('Final damage history:', damageHistory);
+            }
+        };
+
+        source.onerror = function() {
+            console.error('SSE connection error');
+            const summaryContent = document.getElementById('summaryContent');
+            summaryContent.innerHTML = '<div class="no-data">Connection error. Please refresh the page.</div>';
+        };
+    </script>
+    <div style="text-align: center; margin-top: 30px; padding: 15px; font-size: 1rem;">
+    <a href="https://github.com/NuShen1337" target="_blank" style="color: #333; text-decoration: none;">
+        <svg height="24" width="24" viewBox="0 0 16 16" version="1.1" style="vertical-align: middle; margin-right: 5px;">
+            <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        GitHub: NuShen1337
+    </a>
+</div>
+</body>
+</html>
