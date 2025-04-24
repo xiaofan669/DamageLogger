@@ -5,6 +5,8 @@
 - UI Keybind ctrl + M
 - Enjoy
 
+[![veritas](https://img.shields.io/badge/veritas-Discord-%235865F2.svg)](https://discord.gg/Y9kSnPk95H)
+
 # Website UI
 - Server Running on http://127.0.0.1:21500/
 
