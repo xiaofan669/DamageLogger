@@ -10,7 +10,7 @@ mod models;
 mod server;
 mod kreide;
 mod ui;
-mod logging;
+// mod logging;
 mod overlay;
 
 use std::sync::LazyLock;

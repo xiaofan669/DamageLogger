@@ -1,4 +1,4 @@
-use crate::{logging, overlay, subscribers};
+use crate::{overlay, subscribers};
 use ctor::ctor;
 use windows::Win32::System::LibraryLoader::GetModuleHandleW;
 use std::thread::{self};
@@ -8,9 +8,9 @@ use std::time::Duration;
 fn entry() {
 
     thread::spawn(|| unsafe {
-        #[cfg(debug_assertions)]
-        windows::Win32::System::Console::AllocConsole();    
-        logging::MultiLogger::init();
+        // windows::Win32::System::Console::AllocConsole();
+        egui_logger::builder().init().unwrap();
+        #[cfg(debug_assertions)]  
         while GetModuleHandleW(windows::core::w!("GameAssembly")).is_err() ||
             GetModuleHandleW(windows::core::w!("UnityPlayer")).is_err() {
             thread::sleep(Duration::from_millis(10));
@@ -20,6 +20,7 @@ fn entry() {
         overlay::initialize();
         subscribers::battle::subscribe().unwrap();
         log::info!("Finished setup.");
+        log::info!("Github repo:https://github.com/hessiser/veritas");
     });
 
     thread::spawn(|| {
