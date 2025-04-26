@@ -4,19 +4,6 @@ use crate::kreide::gamecore::*;
 use crate::kreide::client::*;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct MMNDIEBMDNL {
-	pub native_object: NativeObject,
-	pub GNBEIGMFGIP: *const c_void,	// 0x10
-	pub HECCDOHIAFD: *const SkillCharacterComponent,	// 0x18
-	pub MKMMNLODHDD: *const c_void,	// 0x20
-	pub FIMNOPAAFEP: *const TurnBasedAbilityComponent,	// 0x28
-	pub HMCDHMFHABF: OLHMAHMMBNN,	// 0x30
-	pub DADCNHAIOMI: i32,	// 0x88
-	pub OOIFIGDBNBO: i32,	// 0x8c
-	pub NMJEMHAMIHD: i32	// 0x90
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
 pub struct NOPBAAAGGLA {
 	pub native_object: NativeObject,
 	pub FKKDFMPMJHG: *const NativeArray<NativeObject>,	// 0x10
@@ -159,6 +146,19 @@ pub struct NOPBAAAGGLA {
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
+pub struct MMNDIEBMDNL {
+	pub native_object: NativeObject,
+	pub GNBEIGMFGIP: *const c_void,	// 0x10
+	pub HECCDOHIAFD: *const SkillCharacterComponent,	// 0x18
+	pub MKMMNLODHDD: *const c_void,	// 0x20
+	pub FIMNOPAAFEP: *const TurnBasedAbilityComponent,	// 0x28
+	pub HMCDHMFHABF: OLHMAHMMBNN,	// 0x30
+	pub DADCNHAIOMI: i32,	// 0x88
+	pub OOIFIGDBNBO: i32,	// 0x8c
+	pub NMJEMHAMIHD: i32	// 0x90
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
 pub struct OLHMAHMMBNN {
 	pub JBHFMCDFPPL: *const c_void,	// 0x0
 	pub FKHHOBBFMEH: *const NativeString,	// 0x8
@@ -183,249 +183,234 @@ pub struct OLHMAHMMBNN {
 pub mod rpg {
 	use std::ffi::c_void;
 	use crate::kreide::types::*;
-	pub mod client {
-	use std::ffi::c_void;
-	use crate::kreide::types::*;
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct AvatarServantData {
-	pub native_object: NativeObject,
-	pub _Json: *const c_void,	// 0x10
-	pub _ServantRowData: *const c_void,	// 0x18
-	pub _Row: *const c_void,	// 0x20
-	pub _SkillDataMap: *const c_void,	// 0x28
-	pub _AvatarData: *const AvatarData	// 0x30
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct ModuleManager {
-	pub native_object: NativeObject,
-	pub MapRotationModule: *const c_void,	// 0x10
-	pub NavMapModule: *const c_void,	// 0x18
-	pub PlanetFesModule: *const c_void,	// 0x20
-	pub ActivityBenefitModule: *const c_void,	// 0x28
-	pub TravelBrochureModule: *const c_void,	// 0x30
-	pub FiveDimModule: *const c_void,	// 0x38
-	pub WorldShop4ThModule: *const c_void,	// 0x40
-	pub BattleTipsModule: *const c_void,	// 0x48
-	pub BattleModule: *const c_void,	// 0x50
-	pub ActivityPlayerReturnModule: *const c_void,	// 0x58
-	pub MissionChronicleModule: *const c_void,	// 0x60
-	pub ActivityTrackPhotoModule: *const c_void,	// 0x68
-	pub TreasureDungeonModule: *const c_void,	// 0x70
-	pub SilverWolfModule: *const c_void,	// 0x78
-	pub WolfBroShootingModule: *const c_void,	// 0x80
-	pub LoadingTipsModule: *const c_void,	// 0x88
-	pub EntityScoreModule: *const c_void,	// 0x90
-	pub MatchThreeModule: *const c_void,	// 0x98
-	pub PamModule: *const c_void,	// 0xa0
-	pub AntiAddictionModule: *const c_void,	// 0xa8
-	pub modules: *const NativeArray<NativeObject>,	// 0xb0
-	pub PlayerModule: *const c_void,	// 0xb8
-	pub BattleCollegeModule: *const c_void,	// 0xc0
-	pub PerformanceRecallModule: *const c_void,	// 0xc8
-	pub RogueMagicModule: *const c_void,	// 0xd0
-	pub SwitchHandModule: *const c_void,	// 0xd8
-	pub TextJoinModule: *const c_void,	// 0xe0
-	pub MultipleDropModule: *const c_void,	// 0xe8
-	pub RoleTrialModule: *const c_void,	// 0xf0
-	pub DrinkMakerModule: *const c_void,	// 0xf8
-	pub TalkModule: *const c_void,	// 0x100
-	pub TrainModule: *const c_void,	// 0x108
-	pub ChallengeModule: *const c_void,	// 0x110
-	pub FloorConnectivityModule: *const c_void,	// 0x118
-	pub HandbookModule: *const c_void,	// 0x120
-	pub RechargeShopModule: *const c_void,	// 0x128
-	pub ActivitySummonModule: *const c_void,	// 0x130
-	pub AdventureModule: *const c_void,	// 0x138
-	pub ScheduleModule: *const c_void,	// 0x140
-	pub InventoryModule: *const c_void,	// 0x148
-	pub PayModule: *const c_void,	// 0x150
-	pub FightFestModule: *const c_void,	// 0x158
-	pub ChimeraModule: *const c_void,	// 0x160
-	pub EarlyAccessModule: *const c_void,	// 0x168
-	pub ActivityMusicRhythmModule: *const c_void,	// 0x170
-	pub CatchGhostModule: *const c_void,	// 0x178
-	pub BoxingClubModule: *const c_void,	// 0x180
-	pub TutorialSupportModule: *const c_void,	// 0x188
-	pub FeatureSwitchModule: *const c_void,	// 0x190
-	pub RaidCollectionModule: *const c_void,	// 0x198
-	pub FormationMoveModule: *const c_void,	// 0x1a0
-	pub MuseumModule: *const c_void,	// 0x1a8
-	pub AchievementModule: *const c_void,	// 0x1b0
-	pub WhiteListInteractUploadModule: *const c_void,	// 0x1b8
-	pub FightActivityModule: *const c_void,	// 0x1c0
-	pub RecommendModule: *const c_void,	// 0x1c8
-	pub MaterialSubmissionModule: *const c_void,	// 0x1d0
-	pub ChatModule: *const c_void,	// 0x1d8
-	pub OperationModule: *const c_void,	// 0x1e0
-	pub MonopolyModule: *const c_void,	// 0x1e8
-	pub PhotoGraphModule: *const c_void,	// 0x1f0
-	pub HeartDialModule: *const c_void,	// 0x1f8
-	pub _ModuleInitRequestList: *const NativeArray<NativeObject>,	// 0x200
-	pub SpaceZooModule: *const c_void,	// 0x208
-	pub ActivityPhotoExhibitionModule: *const c_void,	// 0x210
-	pub CompanionMissionActivityModule: *const c_void,	// 0x218
-	pub StoryTokenModule: *const c_void,	// 0x220
-	pub MarbleModule: *const c_void,	// 0x228
-	pub MissionModule: *const c_void,	// 0x230
-	pub TransferModule: *const c_void,	// 0x238
-	pub ArchiveModule: *const c_void,	// 0x240
-	pub ToastQueueModule: *const c_void,	// 0x248
-	pub MusicAlbumModule: *const c_void,	// 0x250
-	pub ActivityTelevisionModule: *const c_void,	// 0x258
-	pub StarFightModule: *const c_void,	// 0x260
-	pub RogueAdventureModule: *const c_void,	// 0x268
-	pub DialogueModule: *const c_void,	// 0x270
-	pub MultiFloorConflictModule: *const c_void,	// 0x278
-	pub TarotBookModule: *const c_void,	// 0x280
-	pub LobbyModule: *const c_void,	// 0x288
-	pub GameStateServiceModule: *const c_void,	// 0x290
-	pub AlleyModule: *const c_void,	// 0x298
-	pub RelicModule: *const c_void,	// 0x2a0
-	pub ServerPrefsModule: *const c_void,	// 0x2a8
-	pub ShareModule: *const c_void,	// 0x2b0
-	pub MultiPathAvatarModule: *const c_void,	// 0x2b8
-	pub NovelModule: *const c_void,	// 0x2c0
-	pub LoginModule: *const c_void,	// 0x2c8
-	pub HeliobusModule: *const c_void,	// 0x2d0
-	pub GridFightModule: *const c_void,	// 0x2d8
-	pub TrainPartyModule: *const c_void,	// 0x2e0
-	pub CumulativeConsumptionModule: *const c_void,	// 0x2e8
-	pub BigMapModule: *const c_void,	// 0x2f0
-	pub ChessRogueModule: *const c_void,	// 0x2f8
-	pub QuestModule: *const c_void,	// 0x300
-	pub AvatarModule: *const c_void,	// 0x308
-	pub RogueArcadeModule: *const c_void,	// 0x310
-	pub RollShopModule: *const c_void,	// 0x318
-	pub DifficultyAdjustModule: *const c_void,	// 0x320
-	pub EvolveBuildModule: *const c_void,	// 0x328
-	pub SystemOpenModule: *const c_void,	// 0x330
-	pub AetherDivideModule: *const c_void,	// 0x338
-	pub MultiplayerGameModule: *const c_void,	// 0x340
-	pub EntityTimeRewindModule: *const c_void,	// 0x348
-	pub FindChestModule: *const c_void,	// 0x350
-	pub ActivityFeverTimeModule: *const c_void,	// 0x358
-	pub PingPongModule: *const c_void,	// 0x360
-	pub ActivityClockParkModule: *const c_void,	// 0x368
-	pub ActivityQuestTimeLimitModule: *const c_void,	// 0x370
-	pub AnniversaryCollectionModule: *const c_void,	// 0x378
-	pub ActivityGuessTheSilhouetteModule: *const c_void,	// 0x380
-	pub MissionTimelineModule: *const c_void,	// 0x388
-	pub RogueTournModule: *const c_void,	// 0x390
-	pub MessageModule: *const c_void,	// 0x398
-	pub StoryLineModule: *const c_void,	// 0x3a0
-	pub ExpeditionModule: *const c_void,	// 0x3a8
-	pub ActivityStrongChallengeModule: *const c_void,	// 0x3b0
-	pub BattleEventModule: *const c_void,	// 0x3b8
-	pub LuaDataModule: *const c_void,	// 0x3c0
-	pub GrowthModule: *const c_void,	// 0x3c8
-	pub PamSkinModule: *const c_void,	// 0x3d0
-	pub GachaModule: *const c_void,	// 0x3d8
-	pub BattlePassModule: *const c_void,	// 0x3e0
-	pub ActivitySwordTrainingModule: *const c_void,	// 0x3e8
-	pub ActivityModule: *const c_void,	// 0x3f0
-	pub AnniversaryAvatarDeliverModule: *const c_void,	// 0x3f8
-	pub ActivityAetherDivideModule: *const c_void,	// 0x400
-	pub FarmModule: *const c_void,	// 0x408
-	pub MapConnectivityModule: *const c_void,	// 0x410
-	pub ShopModule: *const c_void,	// 0x418
-	pub RaidModule: *const c_void,	// 0x420
-	pub EraFlipperModule: *const c_void,	// 0x428
-	pub PersonalizeModule: *const c_void,	// 0x430
-	pub TitanAtlasModule: *const c_void,	// 0x438
-	pub FantasticStoryActivityModule: *const c_void,	// 0x440
-	pub RogueModule: *const c_void,	// 0x448
-	pub FriendModule: *const c_void,	// 0x450
-	pub PetModule: *const c_void,	// 0x458
-	pub TeamModule: *const c_void,	// 0x460
-	pub OfferingModule: *const c_void,	// 0x468
-	pub PunkLordModule: *const c_void,	// 0x470
-	pub MapPropOverrideConditionModule: *const c_void,	// 0x478
-	pub ItemComposeModule: *const c_void,	// 0x480
-	pub GamePlayLockModule: *const c_void,	// 0x488
-	pub MovieRacingModule: *const c_void,	// 0x490
-	pub RogueHandbookModule: *const c_void,	// 0x498
-	pub isInited: bool	// 0x4a0
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct AvatarData {
-	pub native_object: NativeObject,
-	pub CombatPowerData__BackingField: *const c_void,	// 0x10
-	pub _SkillDataMap: *const c_void,	// 0x18
-	pub RelicsData__BackingField: *const c_void,	// 0x20
-	pub _TrialEquipment: *const c_void,	// 0x28
-	pub _ExtraPropertyAddition: *const c_void,	// 0x30
-	pub GrowUpBeforeData__BackingField: *const c_void,	// 0x38
-	pub _AvatarRowData: *const c_void,	// 0x40
-	pub UltraSkillConfig__BackingField: *const c_void,	// 0x48
-	pub PromotedBeforeData__BackingField: *const c_void,	// 0x50
-	pub SkillTreeData: *const c_void,	// 0x58
-	pub ServantData__BackingField: *const AvatarServantData,	// 0x60
-	pub LevelUpedBeforeData__BackingField: *const c_void,	// 0x68
-	pub AvatarPropertyData__BackingField: *const c_void,	// 0x70
-	pub HasTakenPromotionRewardList__BackingField: *const NativeArray<u32>,	// 0x78
-	pub _SkinIDList: *const NativeArray<u32>,	// 0x80
-	pub Row__BackingField: *const c_void,	// 0x88
-	pub SpecialRow__BackingField: *const c_void,	// 0x90
-	pub _AvatarName: *const NativeString,	// 0x98
-	pub FirstMetTimeStamp: u64,	// 0xa0
-	pub AvatarType__BackingField: i32,	// 0xa8
-	pub EquipmentUID__BackingField: u32,	// 0xac
-	pub Promotion__BackingField: u32,	// 0xb0
-	pub Level__BackingField: u32,	// 0xb4
-	pub CurrentExp__BackingField: u32,	// 0xb8
-	pub Rank__BackingField: u32,	// 0xbc
-	pub RealID__BackingField: u32,	// 0xc0
-	pub _BaseID: u32,	// 0xc4
-	pub _AdventurePlayerID: u32,	// 0xc8
-	pub IsDisplayOnly__BackingField: bool,	// 0xcc
-	pub IsMarked__BackingField: bool,	// 0xcd
-	pub IsNew__BackingField: bool,	// 0xce
-	pub DressedSkinID__BackingField: u32,	// 0xd0
-	pub SpecialAvatarID__BackingField: u32	// 0xd4
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct TextID {
-	pub hash: i32,	// 0x0
-	pub hash64: u64	// 0x8
-}
-	}
 	pub mod gamecore {
 	use std::ffi::c_void;
 	use crate::kreide::types::*;
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct BattleLineupData {
-	pub native_object: NativeObject,
-	pub DeferCreateTrialPlayerDic: *const c_void,	// 0x10
-	pub ExtraTeam: *const NativeArray<LineUpCharacter>,	// 0x18
-	pub _TemplateVariables: *const c_void,	// 0x20
-	pub SpecialAvatarLevelAreaConfigs: *const c_void,	// 0x28
-	pub Context: *const c_void,	// 0x30
-	pub LightTeam: *const NativeArray<LineUpCharacter>,	// 0x38
-	pub BattleExtraPropertyAdditionDict__BackingField: *const c_void,	// 0x40
-	pub AdditionalTemplateVariables: *const c_void,	// 0x48
-	pub TeamBuffIDList: *const NativeArray<u32>,	// 0x50
-	pub _LevelPath: *const NativeString,	// 0x58
-	pub MazeBuffAdded: *const NativeArray<NativeObject>,	// 0x60
-	pub WorldLevel: u32	// 0x68
+pub struct AbilityConfig {
+	pub _parent_object: NativeObject,	// 0x0
+	pub Name: *const NativeString,	// 0x10
+	pub TargetInfo: *const c_void,	// 0x18
+	pub OnAdd: *const NativeArray<NativeObject>,	// 0x20
+	pub OnRemove: *const NativeArray<NativeObject>,	// 0x28
+	pub OnStart: *const NativeArray<NativeObject>,	// 0x30
+	pub DynamicValues: *const c_void,	// 0x38
+	pub TaskListTemplate: *const NativeArray<NativeObject>,	// 0x40
+	pub _TaskListTemplatesMap: *const c_void	// 0x48
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct ServantSkillRowData {
+pub struct SkillData {
 	pub native_object: NativeObject,
-	pub _OverrideData: [u8; 0x88],	// 0x10
-	pub _Row: *const c_void,	// 0x98
-	pub _Config: *const c_void	// 0xa0
+	pub OverrideAnimState: *const NativeString,	// 0x10
+	pub AllChildSkillDatas: *const NativeArray<SkillData>,	// 0x18
+	pub SkillTriggerKey: *const NativeString,	// 0x20
+	pub DefaultTargetInfo: *const c_void,	// 0x28
+	pub Config: *const c_void,	// 0x30
+	pub OverrideCameraConfig: *const c_void,	// 0x38
+	pub UsableCondTask: *const c_void,	// 0x40
+	pub RowData: *const c_void,	// 0x48
+	pub ParentSkillData: *const SkillData,	// 0x50
+	pub VisibleCondTask: *const c_void,	// 0x58
+	pub OverrideTargetInfo: *const c_void,	// 0x60
+	pub SkillCom: *const SkillCharacterComponent,	// 0x68
+	pub CustomReadyConfigConditions: *const NativeArray<NativeObject>,	// 0x70
+	pub _Slot: *const c_void,	// 0x78
+	pub OverrideCameraConfigAdded: *const c_void,	// 0x80
+	pub InsertCondTask: *const c_void,	// 0x88
+	pub _SkillProperties: *const NativeArray<NativeObject>,	// 0x90
+	pub PreshowConditions: *const NativeArray<NativeObject>,	// 0x98
+	pub SkillConfigID: u32,	// 0xa0
+	pub ChildIndex: i32,	// 0xa4
+	pub SkillComboValueDelta: FixPoint,	// 0xa8
+	pub SkillIndex: i32,	// 0xb0
+	pub SkillEffect: i32,	// 0xb4
+	pub AttackType: AttackType,	// 0xb8
+	pub MaxCastTimes: i32,	// 0xbc
+	pub AttackDamageTypePreshowAttach: i32,	// 0xc0
+	pub CommonActiveSkillID: u32,	// 0xc4
+	pub CurrentCoolDown: i32,	// 0xc8
+	pub DefaultCoolDown: i32,	// 0xcc
+	pub AttackDamageTypeOverride: i32,	// 0xd0
+	pub LeftCastTimes: i32	// 0xd4
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct GameComponentBase {
+pub struct TurnBasedAbilityComponent {
+	pub _parent_object:  GameComponentBase,	// 0x0
+	pub LockActionDelayChange: *const c_void,	// 0x18
+	pub _StatusProbabilityDict: *const c_void,	// 0x20
+	pub CharmDamageAttackProperty: *const c_void,	// 0x28
+	pub _DamageStoreList: *const NativeArray<NativeObject>,	// 0x30
+	pub Weakness: *const c_void,	// 0x38
+	pub RegardAsSkillTypeMap: *const NativeArray<NativeObject>,	// 0x40
+	pub _EnableNegativeHPSourceList: *const NativeArray<NativeObject>,	// 0x48
+	pub AdditionalAbilityParamList: *const NativeArray<NativeObject>,	// 0x50
+	pub _DotModifierEventProcessors: *const NativeArray<NativeObject>,	// 0x58
+	pub _DefaultStanceInfo: *const c_void,	// 0x60
+	pub _StatusChanceResistanceDict: *const c_void,	// 0x68
+	pub KillerSkill__BackingField: *const c_void,	// 0x70
+	pub _DebuffLockStepSources: *const NativeArray<NativeObject>,	// 0x78
+	pub _TransformRef: *const c_void,	// 0x80
+	pub _ModifierRecordList: *const c_void,	// 0x88
+	pub LastStanceBreakEntity__BackingField: *const GameEntity,	// 0x90
+	pub _OnHitEffectOverride: *const NativeArray<NativeObject>,	// 0x98
+	pub _ModifierDelayParamList: *const c_void,	// 0xa0
+	pub CustomDataRef__BackingField: *const c_void,	// 0xa8
+	pub _AbilityToSkillMapping: *const c_void,	// 0xb0
+	pub _SyncPropertyMask: *const c_void,	// 0xb8
+	pub _ExtraStanceInfo: *const c_void,	// 0xc0
+	pub _KillerEntity: *const GameEntity,	// 0xc8
+	pub ResistModifierBehaviorFlags__BackingField: *const NativeArray<NativeObject>,	// 0xd0
+	pub _OnHitEffectMultipleOverride: *const NativeArray<NativeObject>,	// 0xd8
+	pub _CharacterDataRef: *const CharacterDataComponent,	// 0xe0
+	pub _DelayModifyActionDelayQueue: *const c_void,	// 0xe8
+	pub _RedStanceInfoList: *const NativeArray<NativeObject>,	// 0xf0
+	pub _ModifierEventSourceMuteCounter: *const c_void,	// 0xf8
+	pub _ExtraMaxLayerConfig: *const NativeArray<NativeObject>,	// 0x100
+	pub _DamageAttacker: *const GameEntity,	// 0x108
+	pub _LockHPList: *const NativeArray<NativeObject>,	// 0x110
+	pub _SelfExtrAbilityList: *const NativeArray<NativeString>,	// 0x118
+	pub CharmDamageTarget: *const GameEntity,	// 0x120
+	pub ProjectileTargetAttachPoint: *const NativeString,	// 0x128
+	pub _RedStanceInfo: *const c_void,	// 0x130
+	pub RegardAsAttackTypeMap: *const NativeArray<NativeObject>,	// 0x138
+	pub _ModifierEventProcessors: *const NativeArray<NativeObject>,	// 0x140
+	pub _JsonConfigRef: *const CharacterConfig,	// 0x148
+	pub _AbilityPropertiesInitSnapshot: *const NativeArray<FixPoint>,	// 0x150
+	pub DisableActionStateByTask__BackingField: *const c_void,	// 0x158
+	pub DamageDefender: *const GameEntity,	// 0x160
+	pub _BuffLockStepSources: *const NativeArray<NativeObject>,	// 0x168
+	pub _DmgChunk: *const c_void,	// 0x170
+	pub _DamagedEntityListInAttack: *const NativeArray<GameEntity>,	// 0x178
+	pub OnAbilityPropertyChanged: *const NativeArray<NativeObject>,	// 0x180
+	pub _LockShieldCounter: *const c_void,	// 0x188
+	pub AbilityComponentRef__BackingField: *const c_void,	// 0x190
+	pub _StancePreshowConfigs: *const NativeArray<NativeObject>,	// 0x198
+	pub OverflowStanceDamageAttacker__BackingField: *const GameEntity,	// 0x1a0
+	pub _DamagedAllEntityIDListInAttack: *const c_void,	// 0x1a8
+	pub DamageSplitData: *const NativeArray<NativeObject>,	// 0x1b0
+	pub _AbilityProperties: *const NativeArray<NativeObject>,	// 0x1b8
+	pub _SyncPropertySource: *const TurnBasedAbilityComponent,	// 0x1c0
+	pub ModifierOverrideMapping: *const c_void,	// 0x1c8
+	pub CharmSkillName: *const NativeString,	// 0x1d0
+	pub _DepartedParams: *const NativeArray<NativeObject>,	// 0x1d8
+	pub LockSelfActionDelay: bool,	// 0x1e0
+	pub IsInAttack: bool,	// 0x1e1
+	pub IsSnapshot__BackingField: bool,	// 0x1e2
+	pub CharmDisableBPAdd: bool,	// 0x1e3
+	pub ForbidVisualFlagValue__BackingField: i32,	// 0x1e4
+	pub TotalDamageCurrentAttack: FixPoint,	// 0x1e8
+	pub _ModifierUIOperationIncr: i32,	// 0x1f0
+	pub StanceType: i32,	// 0x1f4
+	pub BattleTag__BackingField: i32,	// 0x1f8
+	pub _BreakExtendEventUnsettled: bool,	// 0x1fc
+	pub IsSharedDamageDataTarget: bool,	// 0x1fd
+	pub ForceKillFlag__BackingField: bool,	// 0x1fe
+	pub VisualFlagValue__BackingField: i32,	// 0x200
+	pub CurrentAttackType__BackingField: AttackType,	// 0x204
+	pub HasRevived: bool,	// 0x208
+	pub UseSpecialSP__BackingField: bool,	// 0x209
+	pub _IsProcessingModifierDelayParam: bool,	// 0x20a
+	pub MuteTriggerDeath__BackingField: bool,	// 0x20b
+	pub SpeedVisualFlagValue__BackingField: i32,	// 0x20c
+	pub TotalHitNum: FixPoint,	// 0x210
+	pub ActionDelayDistance__BackingField: FixPoint,	// 0x218
+	pub OverflowStanceDamage__BackingField: FixPoint,	// 0x220
+	pub ProjectileHitCount: i32,	// 0x228
+	pub CharmDamageCount: i32,	// 0x22c
+	pub _BuffLockStep: i32,	// 0x230
+	pub LastStanceDamageType__BackingField: i32,	// 0x234
+	pub _IsBehaviorFlagVisualDirty: bool,	// 0x238
+	pub IsTriggeredBlockDamage: bool,	// 0x239
+	pub ActionDelayChanged__BackingField: [u8; 0x2],	// 0x23a
+	pub PropertyChangeFlag__BackingField: bool,	// 0x23c
+	pub _DebuffLockStep: i32,	// 0x240
+	pub IsTriggeringStanceCountDown__BackingField: bool,	// 0x244
+	pub MuteAllTriggerDeath__BackingField: bool,	// 0x245
+	pub LastBreakStanceDamageType__BackingField: i32,	// 0x248
+	pub _ModifierDelayAddCount: i32,	// 0x24c
+	pub _ResetStanceVersion: u32,	// 0x250
+	pub _DeathVersion: u32,	// 0x254
+	pub _CurrentAttackPhase: i32,	// 0x258
+	pub _HighestPriorityOnHitEffect: i32,	// 0x25c
+	pub DeathSource__BackingField: i32,	// 0x260
+	pub bIsInCharmAction: bool,	// 0x264
+	pub CharmDisableSPAdd: bool,	// 0x265
+	pub TriggerBreakExtendLogic: bool,	// 0x266
+	pub BlockModifySp__BackingField: bool,	// 0x267
+	pub StanceState__BackingField: i32,	// 0x268
+	pub InsertAbilityCount: i32,	// 0x26c
+	pub InheritSPRatio: FixPoint	// 0x270
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct GameEntity {
 	pub native_object: NativeObject,
-	pub _OwnerRef: *const GameEntity	// 0x10
+	pub NameForGameCore__BackingField: *const NativeString,	// 0x10
+	pub _CurTickListRef: [u8; 0x10],	// 0x18
+	pub OnStageStateChange: *const c_void,	// 0x28
+	pub OnTeamChange: *const c_void,	// 0x30
+	pub DisposeCallback: *const c_void,	// 0x38
+	pub _OwnerWorldRef: *const c_void,	// 0x40
+	pub _LateUpdateComponentList: *const c_void,	// 0x48
+	pub TagComponentContainer: *const c_void,	// 0x50
+	pub _UnityGO: *const c_void,	// 0x58
+	pub Name__BackingField: *const NativeString,	// 0x60
+	pub _ComponentList: *const c_void,	// 0x68
+	pub WorldTimeScaleAdpator: *const c_void,	// 0x70
+	pub TimeScaleStack: *const c_void,	// 0x78
+	pub _ComponentArray: *const NativeArray<GameComponentBase>,	// 0x80
+	pub _ComponentArrayRef: *const c_void,	// 0x88
+	pub _TickLodProxy: *const c_void,	// 0x90
+	pub _DestroyWaitList: *const c_void,	// 0x98
+	pub _UnstageReasonKey: *const NativeString,	// 0xa0
+	pub _TickComponentList: *const c_void,	// 0xa8
+	pub HoyoTagContainer: *const c_void,	// 0xb0
+	pub TickLodTemplate: *const NativeString,	// 0xb8
+	pub TickLodBoundSize__BackingField: f32,	// 0xc0
+	pub LastTickTime__BackingField: f32,	// 0xc4
+	pub _AliveState: i32,	// 0xc8
+	pub _TickDelayFrameCount: u32,	// 0xcc
+	pub _GroupEntityID: u32,	// 0xd0
+	pub _Tickable: bool,	// 0xd4
+	pub _IsRegisterEnviroChara: bool,	// 0xd5
+	pub IsHero__BackingField: bool,	// 0xd6
+	pub KillImmediately: bool,	// 0xd7
+	pub _ShouldLateUpdate: bool,	// 0xd8
+	pub Visible__BackingField: bool,	// 0xd9
+	pub HasDisposed: bool,	// 0xda
+	pub Disposing: bool,	// 0xdb
+	pub ObjectFeature__BackingField: i32,	// 0xdc
+	pub LastTickBucket__BackingField: i32,	// 0xe0
+	pub RuntimeID__BackingField: u32,	// 0xe4
+	pub _IsOnStage: bool,	// 0xe8
+	pub IsFakeAvatar__BackingField: bool,	// 0xe9
+	pub IsStoryMode__BackingField: bool,	// 0xea
+	pub IsLoaded__BackingField: bool,	// 0xeb
+	pub _Team: TeamType,	// 0xec
+	pub LastTickFrame__BackingField: u64,	// 0xf0
+	pub _EntityType: EntityType,	// 0xf8
+	pub _ForceTickLodLowestReason: *const c_void,	// 0x100
+	pub _ServerEntityID: u32,	// 0x108
+	pub _GroupID: u32,	// 0x10c
+	pub CampID__BackingField: i32,	// 0x110
+	pub ForceIgnoreTickLodBistSet: u32	// 0x114
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct BattleEventDataComponent {
+	pub _parent_object:  CharacterDataComponent,	// 0x0
+	pub _TBAbilityRef: *const TurnBasedAbilityComponent,	// 0x98
+	pub _EnergyBarState: *const c_void,	// 0xa0
+	pub _BattleEventRowData: *const c_void,	// 0xa8
+	pub CreateParams__BackingField: *const c_void,	// 0xb0
+	pub BattleEventConfig__BackingField: *const c_void,	// 0xb8
+	pub SourceCaster__BackingField: *const GameEntity,	// 0xc0
+	pub _HasSkill: bool,	// 0xc8
+	pub WarningChallengeTurnLeft: u32,	// 0xcc
+	pub BattleEventTotalDamageType: TeamType	// 0xd0
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -581,251 +566,21 @@ pub struct TurnBasedGameMode {
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct FixPoint {
-	pub m_rawValue: i64	// 0x0
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct SkillCharacterComponent {
-	pub _parent_object:  GameComponentBase,	// 0x0
-	pub _SkillTypeDisableSlots: *const c_void,	// 0x18
-	pub _JsonConfigRef: *const CharacterConfig,	// 0x20
-	pub CurrentSkillSubTargetList__BackingField: *const NativeArray<GameEntity>,	// 0x28
-	pub OnSkillSetup: *const NativeArray<NativeObject>,	// 0x30
-	pub AutoUseUltraParams: *const c_void,	// 0x38
-	pub CurrentAimAtMainTargetList: *const NativeArray<GameEntity>,	// 0x40
-	pub _recordAbilityInfo: [u8; 0x30],	// 0x48
-	pub CurrentSkillTargetCharacterId: *const c_void,	// 0x78
-	pub _SkillDataList: *const NativeArray<SkillData>,	// 0x80
-	pub CurrentAimAtSubTargetList: *const NativeArray<GameEntity>,	// 0x88
-	pub CurrentSkillTargetList__BackingField: *const NativeArray<GameEntity>,	// 0x90
-	pub _SkillSlots: *const NativeArray<NativeObject>,	// 0x98
-	pub CurrentAimAtTargetList: *const NativeArray<GameEntity>,	// 0xa0
-	pub SkillPointEntity__BackingField: *const GameEntity,	// 0xa8
-	pub _SkillTypeDisableCountArr: *const NativeArray<i32>,	// 0xb0
-	pub _TBAbilityRef: *const TurnBasedAbilityComponent,	// 0xb8
-	pub _SkillTargetRedirectEntries: *const NativeArray<NativeObject>,	// 0xc0
-	pub SkillActualAttacker__BackingField: *const GameEntity,	// 0xc8
-	pub CurrentSkillTargetDamageHP: *const c_void,	// 0xd0
-	pub TaskContext__BackingField: *const c_void,	// 0xd8
-	pub _CharacterDataRef: *const CharacterDataComponent,	// 0xe0
-	pub CurrentSkillHasTriggerEffect: bool,	// 0xe8
-	pub _hasOpInSkill: bool,	// 0xe9
-	pub CurrentSkillKilledCount: i32,	// 0xec
-	pub SelfWaitActiveSkillIndex: i32,	// 0xf0
-	pub CurrentSkillBreakStance: bool,	// 0xf4
-	pub CharmAction: bool,	// 0xf5
-	pub CurrentSkillKillAllOrBoss: bool,	// 0xf6
-	pub _OpIndexInSkill: i32,	// 0xf8
-	pub _SelfSkillPerformState: i32,	// 0xfc
-	pub _CurrentSkillExtraUseParam: i32,	// 0x100
-	pub _CurrentSkillIndex: i32,	// 0x104
-	pub _RecordSkillExtraUseParam: i32,	// 0x108
-	pub _RedirectTargetIDIncr: i32,	// 0x10c
-	pub _TargetPerformTimeCounter: f32,	// 0x110
-	pub _actionSkillIndex: i32,	// 0x114
-	pub _AutoStandbyOnCurSkillFinish: bool,	// 0x118
-	pub _isPassive: bool,	// 0x119
-	pub _hasRecordSkill: bool,	// 0x11a
-	pub IsNoBpCost__BackingField: bool	// 0x11b
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct BattleEventDataComponent {
-	pub _parent_object:  CharacterDataComponent,	// 0x0
-	pub _TBAbilityRef: *const TurnBasedAbilityComponent,	// 0x98
-	pub _EnergyBarState: *const c_void,	// 0xa0
-	pub _BattleEventRowData: *const c_void,	// 0xa8
-	pub CreateParams__BackingField: *const c_void,	// 0xb0
-	pub BattleEventConfig__BackingField: *const c_void,	// 0xb8
-	pub SourceCaster__BackingField: *const GameEntity,	// 0xc0
-	pub _HasSkill: bool,	// 0xc8
-	pub WarningChallengeTurnLeft: u32,	// 0xcc
-	pub BattleEventTotalDamageType: TeamType	// 0xd0
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct TurnBasedAbilityComponent {
-	pub _parent_object:  GameComponentBase,	// 0x0
-	pub LockActionDelayChange: *const c_void,	// 0x18
-	pub _StatusProbabilityDict: *const c_void,	// 0x20
-	pub CharmDamageAttackProperty: *const c_void,	// 0x28
-	pub _DamageStoreList: *const NativeArray<NativeObject>,	// 0x30
-	pub Weakness: *const c_void,	// 0x38
-	pub RegardAsSkillTypeMap: *const NativeArray<NativeObject>,	// 0x40
-	pub _EnableNegativeHPSourceList: *const NativeArray<NativeObject>,	// 0x48
-	pub AdditionalAbilityParamList: *const NativeArray<NativeObject>,	// 0x50
-	pub _DotModifierEventProcessors: *const NativeArray<NativeObject>,	// 0x58
-	pub _DefaultStanceInfo: *const c_void,	// 0x60
-	pub _StatusChanceResistanceDict: *const c_void,	// 0x68
-	pub KillerSkill__BackingField: *const c_void,	// 0x70
-	pub _DebuffLockStepSources: *const NativeArray<NativeObject>,	// 0x78
-	pub _TransformRef: *const c_void,	// 0x80
-	pub _ModifierRecordList: *const c_void,	// 0x88
-	pub LastStanceBreakEntity__BackingField: *const GameEntity,	// 0x90
-	pub _OnHitEffectOverride: *const NativeArray<NativeObject>,	// 0x98
-	pub _ModifierDelayParamList: *const c_void,	// 0xa0
-	pub CustomDataRef__BackingField: *const c_void,	// 0xa8
-	pub _AbilityToSkillMapping: *const c_void,	// 0xb0
-	pub _SyncPropertyMask: *const c_void,	// 0xb8
-	pub _ExtraStanceInfo: *const c_void,	// 0xc0
-	pub _KillerEntity: *const GameEntity,	// 0xc8
-	pub ResistModifierBehaviorFlags__BackingField: *const NativeArray<NativeObject>,	// 0xd0
-	pub _OnHitEffectMultipleOverride: *const NativeArray<NativeObject>,	// 0xd8
-	pub _CharacterDataRef: *const CharacterDataComponent,	// 0xe0
-	pub _DelayModifyActionDelayQueue: *const c_void,	// 0xe8
-	pub _RedStanceInfoList: *const NativeArray<NativeObject>,	// 0xf0
-	pub _ModifierEventSourceMuteCounter: *const c_void,	// 0xf8
-	pub _ExtraMaxLayerConfig: *const NativeArray<NativeObject>,	// 0x100
-	pub _DamageAttacker: *const GameEntity,	// 0x108
-	pub _LockHPList: *const NativeArray<NativeObject>,	// 0x110
-	pub _SelfExtrAbilityList: *const NativeArray<NativeString>,	// 0x118
-	pub CharmDamageTarget: *const GameEntity,	// 0x120
-	pub ProjectileTargetAttachPoint: *const NativeString,	// 0x128
-	pub _RedStanceInfo: *const c_void,	// 0x130
-	pub RegardAsAttackTypeMap: *const NativeArray<NativeObject>,	// 0x138
-	pub _ModifierEventProcessors: *const NativeArray<NativeObject>,	// 0x140
-	pub _JsonConfigRef: *const CharacterConfig,	// 0x148
-	pub _AbilityPropertiesInitSnapshot: *const NativeArray<FixPoint>,	// 0x150
-	pub DisableActionStateByTask__BackingField: *const c_void,	// 0x158
-	pub DamageDefender: *const GameEntity,	// 0x160
-	pub _BuffLockStepSources: *const NativeArray<NativeObject>,	// 0x168
-	pub _DmgChunk: *const c_void,	// 0x170
-	pub _DamagedEntityListInAttack: *const NativeArray<GameEntity>,	// 0x178
-	pub OnAbilityPropertyChanged: *const NativeArray<NativeObject>,	// 0x180
-	pub _LockShieldCounter: *const c_void,	// 0x188
-	pub AbilityComponentRef__BackingField: *const c_void,	// 0x190
-	pub _StancePreshowConfigs: *const NativeArray<NativeObject>,	// 0x198
-	pub OverflowStanceDamageAttacker__BackingField: *const GameEntity,	// 0x1a0
-	pub _DamagedAllEntityIDListInAttack: *const c_void,	// 0x1a8
-	pub DamageSplitData: *const NativeArray<NativeObject>,	// 0x1b0
-	pub _AbilityProperties: *const NativeArray<NativeObject>,	// 0x1b8
-	pub _SyncPropertySource: *const TurnBasedAbilityComponent,	// 0x1c0
-	pub ModifierOverrideMapping: *const c_void,	// 0x1c8
-	pub CharmSkillName: *const NativeString,	// 0x1d0
-	pub _DepartedParams: *const NativeArray<NativeObject>,	// 0x1d8
-	pub LockSelfActionDelay: bool,	// 0x1e0
-	pub IsInAttack: bool,	// 0x1e1
-	pub IsSnapshot__BackingField: bool,	// 0x1e2
-	pub CharmDisableBPAdd: bool,	// 0x1e3
-	pub ForbidVisualFlagValue__BackingField: i32,	// 0x1e4
-	pub TotalDamageCurrentAttack: FixPoint,	// 0x1e8
-	pub _ModifierUIOperationIncr: i32,	// 0x1f0
-	pub StanceType: i32,	// 0x1f4
-	pub BattleTag__BackingField: i32,	// 0x1f8
-	pub _BreakExtendEventUnsettled: bool,	// 0x1fc
-	pub IsSharedDamageDataTarget: bool,	// 0x1fd
-	pub ForceKillFlag__BackingField: bool,	// 0x1fe
-	pub VisualFlagValue__BackingField: i32,	// 0x200
-	pub CurrentAttackType__BackingField: AttackType,	// 0x204
-	pub HasRevived: bool,	// 0x208
-	pub UseSpecialSP__BackingField: bool,	// 0x209
-	pub _IsProcessingModifierDelayParam: bool,	// 0x20a
-	pub MuteTriggerDeath__BackingField: bool,	// 0x20b
-	pub SpeedVisualFlagValue__BackingField: i32,	// 0x20c
-	pub TotalHitNum: FixPoint,	// 0x210
-	pub ActionDelayDistance__BackingField: FixPoint,	// 0x218
-	pub OverflowStanceDamage__BackingField: FixPoint,	// 0x220
-	pub ProjectileHitCount: i32,	// 0x228
-	pub CharmDamageCount: i32,	// 0x22c
-	pub _BuffLockStep: i32,	// 0x230
-	pub LastStanceDamageType__BackingField: i32,	// 0x234
-	pub _IsBehaviorFlagVisualDirty: bool,	// 0x238
-	pub IsTriggeredBlockDamage: bool,	// 0x239
-	pub ActionDelayChanged__BackingField: [u8; 0x2],	// 0x23a
-	pub PropertyChangeFlag__BackingField: bool,	// 0x23c
-	pub _DebuffLockStep: i32,	// 0x240
-	pub IsTriggeringStanceCountDown__BackingField: bool,	// 0x244
-	pub MuteAllTriggerDeath__BackingField: bool,	// 0x245
-	pub LastBreakStanceDamageType__BackingField: i32,	// 0x248
-	pub _ModifierDelayAddCount: i32,	// 0x24c
-	pub _ResetStanceVersion: u32,	// 0x250
-	pub _DeathVersion: u32,	// 0x254
-	pub _CurrentAttackPhase: i32,	// 0x258
-	pub _HighestPriorityOnHitEffect: i32,	// 0x25c
-	pub DeathSource__BackingField: i32,	// 0x260
-	pub bIsInCharmAction: bool,	// 0x264
-	pub CharmDisableSPAdd: bool,	// 0x265
-	pub TriggerBreakExtendLogic: bool,	// 0x266
-	pub BlockModifySp__BackingField: bool,	// 0x267
-	pub StanceState__BackingField: i32,	// 0x268
-	pub InsertAbilityCount: i32,	// 0x26c
-	pub InheritSPRatio: FixPoint	// 0x270
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct SkillData {
-	pub native_object: NativeObject,
-	pub OverrideAnimState: *const NativeString,	// 0x10
-	pub AllChildSkillDatas: *const NativeArray<SkillData>,	// 0x18
-	pub SkillTriggerKey: *const NativeString,	// 0x20
-	pub DefaultTargetInfo: *const c_void,	// 0x28
-	pub Config: *const c_void,	// 0x30
-	pub OverrideCameraConfig: *const c_void,	// 0x38
-	pub UsableCondTask: *const c_void,	// 0x40
-	pub RowData: *const c_void,	// 0x48
-	pub ParentSkillData: *const SkillData,	// 0x50
-	pub VisibleCondTask: *const c_void,	// 0x58
-	pub OverrideTargetInfo: *const c_void,	// 0x60
-	pub SkillCom: *const SkillCharacterComponent,	// 0x68
-	pub CustomReadyConfigConditions: *const NativeArray<NativeObject>,	// 0x70
-	pub _Slot: *const c_void,	// 0x78
-	pub OverrideCameraConfigAdded: *const c_void,	// 0x80
-	pub InsertCondTask: *const c_void,	// 0x88
-	pub _SkillProperties: *const NativeArray<NativeObject>,	// 0x90
-	pub PreshowConditions: *const NativeArray<NativeObject>,	// 0x98
-	pub SkillConfigID: u32,	// 0xa0
-	pub ChildIndex: i32,	// 0xa4
-	pub SkillComboValueDelta: FixPoint,	// 0xa8
-	pub SkillIndex: i32,	// 0xb0
-	pub SkillEffect: i32,	// 0xb4
-	pub AttackType: AttackType,	// 0xb8
-	pub MaxCastTimes: i32,	// 0xbc
-	pub AttackDamageTypePreshowAttach: i32,	// 0xc0
-	pub CommonActiveSkillID: u32,	// 0xc4
-	pub CurrentCoolDown: i32,	// 0xc8
-	pub DefaultCoolDown: i32,	// 0xcc
-	pub AttackDamageTypeOverride: i32,	// 0xd0
-	pub LeftCastTimes: i32	// 0xd4
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct AbilityConfig {
-	pub _parent_object: NativeObject,	// 0x0
-	pub Name: *const NativeString,	// 0x10
-	pub TargetInfo: *const c_void,	// 0x18
-	pub OnAdd: *const NativeArray<NativeObject>,	// 0x20
-	pub OnRemove: *const NativeArray<NativeObject>,	// 0x28
-	pub OnStart: *const NativeArray<NativeObject>,	// 0x30
-	pub DynamicValues: *const c_void,	// 0x38
-	pub TaskListTemplate: *const NativeArray<NativeObject>,	// 0x40
-	pub _TaskListTemplatesMap: *const c_void	// 0x48
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct AvatarSkillRowData {
-	pub native_object: NativeObject,
-	pub _Config: *const c_void,	// 0x10
-	pub _OverrideData: [u8; 0x88],	// 0x18
-	pub _Row: *const c_void	// 0xa0
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct BattleEventSkillRowData {
-	pub native_object: NativeObject,
-	pub _Row: *const c_void,	// 0x10
-	pub _OverrideData: [u8; 0x88],	// 0x18
-	pub _Config: *const c_void	// 0xa0
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub enum TeamType {
-	TeamUnknow = 0,
-	TeamLight = 1,
-	TeamDark = 2,
-	TeamNeutral = 3,
-	TeamNPC = 4,
-	Count = 5
+pub enum AttackType {
+	Unknown = 0,
+	Normal = 1,
+	BPSkill = 2,
+	Ultra = 3,
+	QTE = 4,
+	DOT = 5,
+	Pursued = 6,
+	Maze = 7,
+	MazeNormal = 8,
+	Insert = 9,
+	ElementDamage = 10,
+	Level = 11,
+	Servant = 12,
+	TrueDamage = 13
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -871,85 +626,22 @@ pub enum EntityType {
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct CharacterDataComponent {
-	pub _parent_object:  GameComponentBase,	// 0x0
-	pub _DynamicScaleAdaptConfigs: *const NativeArray<NativeObject>,	// 0x18
-	pub JsonConfig__BackingField: *const CharacterConfig,	// 0x20
-	pub HideDisplayInfoSkillNames: *const c_void,	// 0x28
-	pub _DummpyEntityList: *const NativeArray<NativeObject>,	// 0x30
-	pub _DynamicScaleAdaptTypes: *const NativeArray<NativeObject>,	// 0x38
-	pub _CharacterUICustomValueDict: *const c_void,	// 0x40
-	pub _RowData: *const c_void,	// 0x48
-	pub _DynamicScaleAdaptEffectPathRule: *const c_void,	// 0x50
-	pub Summoner: *const GameEntity,	// 0x58
-	pub CreateReason: i32,	// 0x60
-	pub LocalOffsetAsMoveTarget__BackingField: [u8; 0xc],	// 0x64
-	pub DisableRootYawMapping__BackingField: bool,	// 0x70
-	pub IsBodyPart: bool,	// 0x71
-	pub DisableHeadLookAtActionEntityOverride: [u8; 0x2],	// 0x72
-	pub IsVisibleInViewMode__BackingField: bool,	// 0x74
-	pub EnhancedState: i32,	// 0x78
-	pub CharacterID__BackingField: u32,	// 0x7c
-	pub TriggerLimbo: bool,	// 0x80
-	pub _SaveModelWhenDeadOverride: [u8; 0x3],	// 0x81
-	pub SpawnTurnCount: u32,	// 0x84
-	pub LastActTurnCount__BackingField: u32,	// 0x88
-	pub GridFightTag__BackingField: i32,	// 0x8c
-	pub LineupIndex: i32	// 0x90
+pub struct FixPoint {
+	pub m_rawValue: i64	// 0x0
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct GameEntity {
+pub struct GameComponentBase {
 	pub native_object: NativeObject,
-	pub NameForGameCore__BackingField: *const NativeString,	// 0x10
-	pub _CurTickListRef: [u8; 0x10],	// 0x18
-	pub OnStageStateChange: *const c_void,	// 0x28
-	pub OnTeamChange: *const c_void,	// 0x30
-	pub DisposeCallback: *const c_void,	// 0x38
-	pub _OwnerWorldRef: *const c_void,	// 0x40
-	pub _LateUpdateComponentList: *const c_void,	// 0x48
-	pub TagComponentContainer: *const c_void,	// 0x50
-	pub _UnityGO: *const c_void,	// 0x58
-	pub Name__BackingField: *const NativeString,	// 0x60
-	pub _ComponentList: *const c_void,	// 0x68
-	pub WorldTimeScaleAdpator: *const c_void,	// 0x70
-	pub TimeScaleStack: *const c_void,	// 0x78
-	pub _ComponentArray: *const NativeArray<GameComponentBase>,	// 0x80
-	pub _ComponentArrayRef: *const c_void,	// 0x88
-	pub _TickLodProxy: *const c_void,	// 0x90
-	pub _DestroyWaitList: *const c_void,	// 0x98
-	pub _UnstageReasonKey: *const NativeString,	// 0xa0
-	pub _TickComponentList: *const c_void,	// 0xa8
-	pub HoyoTagContainer: *const c_void,	// 0xb0
-	pub TickLodTemplate: *const NativeString,	// 0xb8
-	pub TickLodBoundSize__BackingField: f32,	// 0xc0
-	pub LastTickTime__BackingField: f32,	// 0xc4
-	pub _AliveState: i32,	// 0xc8
-	pub _TickDelayFrameCount: u32,	// 0xcc
-	pub _GroupEntityID: u32,	// 0xd0
-	pub _Tickable: bool,	// 0xd4
-	pub _IsRegisterEnviroChara: bool,	// 0xd5
-	pub IsHero__BackingField: bool,	// 0xd6
-	pub KillImmediately: bool,	// 0xd7
-	pub _ShouldLateUpdate: bool,	// 0xd8
-	pub Visible__BackingField: bool,	// 0xd9
-	pub HasDisposed: bool,	// 0xda
-	pub Disposing: bool,	// 0xdb
-	pub ObjectFeature__BackingField: i32,	// 0xdc
-	pub LastTickBucket__BackingField: i32,	// 0xe0
-	pub RuntimeID__BackingField: u32,	// 0xe4
-	pub _IsOnStage: bool,	// 0xe8
-	pub IsFakeAvatar__BackingField: bool,	// 0xe9
-	pub IsStoryMode__BackingField: bool,	// 0xea
-	pub IsLoaded__BackingField: bool,	// 0xeb
-	pub _Team: TeamType,	// 0xec
-	pub LastTickFrame__BackingField: u64,	// 0xf0
-	pub _EntityType: EntityType,	// 0xf8
-	pub _ForceTickLodLowestReason: *const c_void,	// 0x100
-	pub _ServerEntityID: u32,	// 0x108
-	pub _GroupID: u32,	// 0x10c
-	pub CampID__BackingField: i32,	// 0x110
-	pub ForceIgnoreTickLodBistSet: u32	// 0x114
+	pub _OwnerRef: *const GameEntity	// 0x10
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct BattleEventSkillRowData {
+	pub native_object: NativeObject,
+	pub _Row: *const c_void,	// 0x10
+	pub _OverrideData: [u8; 0x88],	// 0x18
+	pub _Config: *const c_void	// 0xa0
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -976,35 +668,6 @@ pub struct LineUpCharacter {
 	pub CharacterHPRatio: FixPoint,	// 0x78
 	pub CharacterID: u32,	// 0x80
 	pub CharacterLevel: u32	// 0x84
-}
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct EntityManager {
-	pub native_object: NativeObject,
-	pub DataViewUISelectFadeOutSummonerEntity__BackingField: *const GameEntity,	// 0x10
-	pub _ProcessEntityTeamChangeDelg: *const c_void,	// 0x18
-	pub _AllEntityDictionary: *const c_void,	// 0x20
-	pub _AllTeamEntityList: *const NativeArray<GameEntity>,	// 0x28
-	pub _SnapshotEntityMap: *const c_void,	// 0x30
-	pub _UniqueNamedEntityDictionary: *const c_void,	// 0x38
-	pub LevelEntity__BackingField: *const GameEntity,	// 0x40
-	pub DataViewUISelectFadeOutEntity__BackingField: *const GameEntity,	// 0x48
-	pub _ServerEntityIDToEntityDict: *const c_void,	// 0x50
-	pub EntityGORoot__BackingField: *const c_void,	// 0x58
-	pub LittleGameGORoot__BackingField: *const c_void,	// 0x60
-	pub GroupGORoot__BackingField: *const c_void,	// 0x68
-	pub DataViewUISelectSummonerOfUncreatedServant__BackingField: *const GameEntity,	// 0x70
-	pub _PauseEntityTimeSlowIndexDic: *const NativeArray<NativeObject>,	// 0x78
-	pub PerformanceGORoot__BackingField: *const c_void,	// 0x80
-	pub DataViewUILeaveSummonerOfUncreatedServant__BackingField: *const GameEntity,	// 0x88
-	pub _EntityUniqueNameDict: *const NativeArray<NativeObject>,	// 0x90
-	pub PlayerGORoot__BackingField: *const c_void,	// 0x98
-	pub DataViewUISelectFadeInEntity__BackingField: *const GameEntity,	// 0xa0
-	pub _AllTeamEntity: *const NativeArray<GameEntity>,	// 0xa8
-	pub _GroupEntityIDToEntityDict: *const c_void,	// 0xb0
-	pub DataViewUISelectFadeInFollowEntities__BackingField: *const c_void,	// 0xb8
-	pub _OwnerWorldRef: *const c_void,	// 0xc0
-	pub _UseUniqueSnapshot: bool	// 0xc8
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -1079,21 +742,358 @@ pub struct CharacterConfig {
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub enum AttackType {
-	Unknown = 0,
-	Normal = 1,
-	BPSkill = 2,
-	Ultra = 3,
-	QTE = 4,
-	DOT = 5,
-	Pursued = 6,
-	Maze = 7,
-	MazeNormal = 8,
-	Insert = 9,
-	ElementDamage = 10,
-	Level = 11,
-	Servant = 12,
-	TrueDamage = 13
+pub struct ServantSkillRowData {
+	pub native_object: NativeObject,
+	pub _OverrideData: [u8; 0x88],	// 0x10
+	pub _Row: *const c_void,	// 0x98
+	pub _Config: *const c_void	// 0xa0
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct CharacterDataComponent {
+	pub _parent_object:  GameComponentBase,	// 0x0
+	pub _DynamicScaleAdaptConfigs: *const NativeArray<NativeObject>,	// 0x18
+	pub JsonConfig__BackingField: *const CharacterConfig,	// 0x20
+	pub HideDisplayInfoSkillNames: *const c_void,	// 0x28
+	pub _DummpyEntityList: *const NativeArray<NativeObject>,	// 0x30
+	pub _DynamicScaleAdaptTypes: *const NativeArray<NativeObject>,	// 0x38
+	pub _CharacterUICustomValueDict: *const c_void,	// 0x40
+	pub _RowData: *const c_void,	// 0x48
+	pub _DynamicScaleAdaptEffectPathRule: *const c_void,	// 0x50
+	pub Summoner: *const GameEntity,	// 0x58
+	pub CreateReason: i32,	// 0x60
+	pub LocalOffsetAsMoveTarget__BackingField: [u8; 0xc],	// 0x64
+	pub DisableRootYawMapping__BackingField: bool,	// 0x70
+	pub IsBodyPart: bool,	// 0x71
+	pub DisableHeadLookAtActionEntityOverride: [u8; 0x2],	// 0x72
+	pub IsVisibleInViewMode__BackingField: bool,	// 0x74
+	pub EnhancedState: i32,	// 0x78
+	pub CharacterID__BackingField: u32,	// 0x7c
+	pub TriggerLimbo: bool,	// 0x80
+	pub _SaveModelWhenDeadOverride: [u8; 0x3],	// 0x81
+	pub SpawnTurnCount: u32,	// 0x84
+	pub LastActTurnCount__BackingField: u32,	// 0x88
+	pub GridFightTag__BackingField: i32,	// 0x8c
+	pub LineupIndex: i32	// 0x90
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub enum TeamType {
+	TeamUnknow = 0,
+	TeamLight = 1,
+	TeamDark = 2,
+	TeamNeutral = 3,
+	TeamNPC = 4,
+	Count = 5
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct EntityManager {
+	pub native_object: NativeObject,
+	pub DataViewUISelectFadeOutSummonerEntity__BackingField: *const GameEntity,	// 0x10
+	pub _ProcessEntityTeamChangeDelg: *const c_void,	// 0x18
+	pub _AllEntityDictionary: *const c_void,	// 0x20
+	pub _AllTeamEntityList: *const NativeArray<GameEntity>,	// 0x28
+	pub _SnapshotEntityMap: *const c_void,	// 0x30
+	pub _UniqueNamedEntityDictionary: *const c_void,	// 0x38
+	pub LevelEntity__BackingField: *const GameEntity,	// 0x40
+	pub DataViewUISelectFadeOutEntity__BackingField: *const GameEntity,	// 0x48
+	pub _ServerEntityIDToEntityDict: *const c_void,	// 0x50
+	pub EntityGORoot__BackingField: *const c_void,	// 0x58
+	pub LittleGameGORoot__BackingField: *const c_void,	// 0x60
+	pub GroupGORoot__BackingField: *const c_void,	// 0x68
+	pub DataViewUISelectSummonerOfUncreatedServant__BackingField: *const GameEntity,	// 0x70
+	pub _PauseEntityTimeSlowIndexDic: *const NativeArray<NativeObject>,	// 0x78
+	pub PerformanceGORoot__BackingField: *const c_void,	// 0x80
+	pub DataViewUILeaveSummonerOfUncreatedServant__BackingField: *const GameEntity,	// 0x88
+	pub _EntityUniqueNameDict: *const NativeArray<NativeObject>,	// 0x90
+	pub PlayerGORoot__BackingField: *const c_void,	// 0x98
+	pub DataViewUISelectFadeInEntity__BackingField: *const GameEntity,	// 0xa0
+	pub _AllTeamEntity: *const NativeArray<GameEntity>,	// 0xa8
+	pub _GroupEntityIDToEntityDict: *const c_void,	// 0xb0
+	pub DataViewUISelectFadeInFollowEntities__BackingField: *const c_void,	// 0xb8
+	pub _OwnerWorldRef: *const c_void,	// 0xc0
+	pub _UseUniqueSnapshot: bool	// 0xc8
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct SkillCharacterComponent {
+	pub _parent_object:  GameComponentBase,	// 0x0
+	pub _SkillTypeDisableSlots: *const c_void,	// 0x18
+	pub _JsonConfigRef: *const CharacterConfig,	// 0x20
+	pub CurrentSkillSubTargetList__BackingField: *const NativeArray<GameEntity>,	// 0x28
+	pub OnSkillSetup: *const NativeArray<NativeObject>,	// 0x30
+	pub AutoUseUltraParams: *const c_void,	// 0x38
+	pub CurrentAimAtMainTargetList: *const NativeArray<GameEntity>,	// 0x40
+	pub _recordAbilityInfo: [u8; 0x30],	// 0x48
+	pub CurrentSkillTargetCharacterId: *const c_void,	// 0x78
+	pub _SkillDataList: *const NativeArray<SkillData>,	// 0x80
+	pub CurrentAimAtSubTargetList: *const NativeArray<GameEntity>,	// 0x88
+	pub CurrentSkillTargetList__BackingField: *const NativeArray<GameEntity>,	// 0x90
+	pub _SkillSlots: *const NativeArray<NativeObject>,	// 0x98
+	pub CurrentAimAtTargetList: *const NativeArray<GameEntity>,	// 0xa0
+	pub SkillPointEntity__BackingField: *const GameEntity,	// 0xa8
+	pub _SkillTypeDisableCountArr: *const NativeArray<i32>,	// 0xb0
+	pub _TBAbilityRef: *const TurnBasedAbilityComponent,	// 0xb8
+	pub _SkillTargetRedirectEntries: *const NativeArray<NativeObject>,	// 0xc0
+	pub SkillActualAttacker__BackingField: *const GameEntity,	// 0xc8
+	pub CurrentSkillTargetDamageHP: *const c_void,	// 0xd0
+	pub TaskContext__BackingField: *const c_void,	// 0xd8
+	pub _CharacterDataRef: *const CharacterDataComponent,	// 0xe0
+	pub CurrentSkillHasTriggerEffect: bool,	// 0xe8
+	pub _hasOpInSkill: bool,	// 0xe9
+	pub CurrentSkillKilledCount: i32,	// 0xec
+	pub SelfWaitActiveSkillIndex: i32,	// 0xf0
+	pub CurrentSkillBreakStance: bool,	// 0xf4
+	pub CharmAction: bool,	// 0xf5
+	pub CurrentSkillKillAllOrBoss: bool,	// 0xf6
+	pub _OpIndexInSkill: i32,	// 0xf8
+	pub _SelfSkillPerformState: i32,	// 0xfc
+	pub _CurrentSkillExtraUseParam: i32,	// 0x100
+	pub _CurrentSkillIndex: i32,	// 0x104
+	pub _RecordSkillExtraUseParam: i32,	// 0x108
+	pub _RedirectTargetIDIncr: i32,	// 0x10c
+	pub _TargetPerformTimeCounter: f32,	// 0x110
+	pub _actionSkillIndex: i32,	// 0x114
+	pub _AutoStandbyOnCurSkillFinish: bool,	// 0x118
+	pub _isPassive: bool,	// 0x119
+	pub _hasRecordSkill: bool,	// 0x11a
+	pub IsNoBpCost__BackingField: bool	// 0x11b
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct BattleLineupData {
+	pub native_object: NativeObject,
+	pub DeferCreateTrialPlayerDic: *const c_void,	// 0x10
+	pub ExtraTeam: *const NativeArray<LineUpCharacter>,	// 0x18
+	pub _TemplateVariables: *const c_void,	// 0x20
+	pub SpecialAvatarLevelAreaConfigs: *const c_void,	// 0x28
+	pub Context: *const c_void,	// 0x30
+	pub LightTeam: *const NativeArray<LineUpCharacter>,	// 0x38
+	pub BattleExtraPropertyAdditionDict__BackingField: *const c_void,	// 0x40
+	pub AdditionalTemplateVariables: *const c_void,	// 0x48
+	pub TeamBuffIDList: *const NativeArray<u32>,	// 0x50
+	pub _LevelPath: *const NativeString,	// 0x58
+	pub MazeBuffAdded: *const NativeArray<NativeObject>,	// 0x60
+	pub WorldLevel: u32	// 0x68
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct AvatarSkillRowData {
+	pub native_object: NativeObject,
+	pub _Config: *const c_void,	// 0x10
+	pub _OverrideData: [u8; 0x88],	// 0x18
+	pub _Row: *const c_void	// 0xa0
+}
+	}
+	pub mod client {
+	use std::ffi::c_void;
+	use crate::kreide::types::*;
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct ModuleManager {
+	pub native_object: NativeObject,
+	pub MapRotationModule: *const c_void,	// 0x10
+	pub NavMapModule: *const c_void,	// 0x18
+	pub PlanetFesModule: *const c_void,	// 0x20
+	pub ActivityBenefitModule: *const c_void,	// 0x28
+	pub TravelBrochureModule: *const c_void,	// 0x30
+	pub FiveDimModule: *const c_void,	// 0x38
+	pub WorldShop4ThModule: *const c_void,	// 0x40
+	pub BattleTipsModule: *const c_void,	// 0x48
+	pub BattleModule: *const c_void,	// 0x50
+	pub ActivityPlayerReturnModule: *const c_void,	// 0x58
+	pub MissionChronicleModule: *const c_void,	// 0x60
+	pub ActivityTrackPhotoModule: *const c_void,	// 0x68
+	pub TreasureDungeonModule: *const c_void,	// 0x70
+	pub SilverWolfModule: *const c_void,	// 0x78
+	pub WolfBroShootingModule: *const c_void,	// 0x80
+	pub LoadingTipsModule: *const c_void,	// 0x88
+	pub EntityScoreModule: *const c_void,	// 0x90
+	pub MatchThreeModule: *const c_void,	// 0x98
+	pub PamModule: *const c_void,	// 0xa0
+	pub AntiAddictionModule: *const c_void,	// 0xa8
+	pub modules: *const NativeArray<NativeObject>,	// 0xb0
+	pub PlayerModule: *const c_void,	// 0xb8
+	pub BattleCollegeModule: *const c_void,	// 0xc0
+	pub PerformanceRecallModule: *const c_void,	// 0xc8
+	pub RogueMagicModule: *const c_void,	// 0xd0
+	pub SwitchHandModule: *const c_void,	// 0xd8
+	pub TextJoinModule: *const c_void,	// 0xe0
+	pub MultipleDropModule: *const c_void,	// 0xe8
+	pub RoleTrialModule: *const c_void,	// 0xf0
+	pub DrinkMakerModule: *const c_void,	// 0xf8
+	pub TalkModule: *const c_void,	// 0x100
+	pub TrainModule: *const c_void,	// 0x108
+	pub ChallengeModule: *const c_void,	// 0x110
+	pub FloorConnectivityModule: *const c_void,	// 0x118
+	pub HandbookModule: *const c_void,	// 0x120
+	pub RechargeShopModule: *const c_void,	// 0x128
+	pub ActivitySummonModule: *const c_void,	// 0x130
+	pub AdventureModule: *const c_void,	// 0x138
+	pub ScheduleModule: *const c_void,	// 0x140
+	pub InventoryModule: *const c_void,	// 0x148
+	pub PayModule: *const c_void,	// 0x150
+	pub FightFestModule: *const c_void,	// 0x158
+	pub ChimeraModule: *const c_void,	// 0x160
+	pub EarlyAccessModule: *const c_void,	// 0x168
+	pub ActivityMusicRhythmModule: *const c_void,	// 0x170
+	pub CatchGhostModule: *const c_void,	// 0x178
+	pub BoxingClubModule: *const c_void,	// 0x180
+	pub TutorialSupportModule: *const c_void,	// 0x188
+	pub FeatureSwitchModule: *const c_void,	// 0x190
+	pub RaidCollectionModule: *const c_void,	// 0x198
+	pub FormationMoveModule: *const c_void,	// 0x1a0
+	pub MuseumModule: *const c_void,	// 0x1a8
+	pub AchievementModule: *const c_void,	// 0x1b0
+	pub WhiteListInteractUploadModule: *const c_void,	// 0x1b8
+	pub FightActivityModule: *const c_void,	// 0x1c0
+	pub RecommendModule: *const c_void,	// 0x1c8
+	pub MaterialSubmissionModule: *const c_void,	// 0x1d0
+	pub ChatModule: *const c_void,	// 0x1d8
+	pub OperationModule: *const c_void,	// 0x1e0
+	pub MonopolyModule: *const c_void,	// 0x1e8
+	pub PhotoGraphModule: *const c_void,	// 0x1f0
+	pub HeartDialModule: *const c_void,	// 0x1f8
+	pub _ModuleInitRequestList: *const NativeArray<NativeObject>,	// 0x200
+	pub SpaceZooModule: *const c_void,	// 0x208
+	pub ActivityPhotoExhibitionModule: *const c_void,	// 0x210
+	pub CompanionMissionActivityModule: *const c_void,	// 0x218
+	pub StoryTokenModule: *const c_void,	// 0x220
+	pub MarbleModule: *const c_void,	// 0x228
+	pub MissionModule: *const c_void,	// 0x230
+	pub TransferModule: *const c_void,	// 0x238
+	pub ArchiveModule: *const c_void,	// 0x240
+	pub ToastQueueModule: *const c_void,	// 0x248
+	pub MusicAlbumModule: *const c_void,	// 0x250
+	pub ActivityTelevisionModule: *const c_void,	// 0x258
+	pub StarFightModule: *const c_void,	// 0x260
+	pub RogueAdventureModule: *const c_void,	// 0x268
+	pub DialogueModule: *const c_void,	// 0x270
+	pub MultiFloorConflictModule: *const c_void,	// 0x278
+	pub TarotBookModule: *const c_void,	// 0x280
+	pub LobbyModule: *const c_void,	// 0x288
+	pub GameStateServiceModule: *const c_void,	// 0x290
+	pub AlleyModule: *const c_void,	// 0x298
+	pub RelicModule: *const c_void,	// 0x2a0
+	pub ServerPrefsModule: *const c_void,	// 0x2a8
+	pub ShareModule: *const c_void,	// 0x2b0
+	pub MultiPathAvatarModule: *const c_void,	// 0x2b8
+	pub NovelModule: *const c_void,	// 0x2c0
+	pub LoginModule: *const c_void,	// 0x2c8
+	pub HeliobusModule: *const c_void,	// 0x2d0
+	pub GridFightModule: *const c_void,	// 0x2d8
+	pub TrainPartyModule: *const c_void,	// 0x2e0
+	pub CumulativeConsumptionModule: *const c_void,	// 0x2e8
+	pub BigMapModule: *const c_void,	// 0x2f0
+	pub ChessRogueModule: *const c_void,	// 0x2f8
+	pub QuestModule: *const c_void,	// 0x300
+	pub AvatarModule: *const c_void,	// 0x308
+	pub RogueArcadeModule: *const c_void,	// 0x310
+	pub RollShopModule: *const c_void,	// 0x318
+	pub DifficultyAdjustModule: *const c_void,	// 0x320
+	pub EvolveBuildModule: *const c_void,	// 0x328
+	pub SystemOpenModule: *const c_void,	// 0x330
+	pub AetherDivideModule: *const c_void,	// 0x338
+	pub MultiplayerGameModule: *const c_void,	// 0x340
+	pub EntityTimeRewindModule: *const c_void,	// 0x348
+	pub FindChestModule: *const c_void,	// 0x350
+	pub ActivityFeverTimeModule: *const c_void,	// 0x358
+	pub PingPongModule: *const c_void,	// 0x360
+	pub ActivityClockParkModule: *const c_void,	// 0x368
+	pub ActivityQuestTimeLimitModule: *const c_void,	// 0x370
+	pub AnniversaryCollectionModule: *const c_void,	// 0x378
+	pub ActivityGuessTheSilhouetteModule: *const c_void,	// 0x380
+	pub MissionTimelineModule: *const c_void,	// 0x388
+	pub RogueTournModule: *const c_void,	// 0x390
+	pub MessageModule: *const c_void,	// 0x398
+	pub StoryLineModule: *const c_void,	// 0x3a0
+	pub ExpeditionModule: *const c_void,	// 0x3a8
+	pub ActivityStrongChallengeModule: *const c_void,	// 0x3b0
+	pub BattleEventModule: *const c_void,	// 0x3b8
+	pub LuaDataModule: *const c_void,	// 0x3c0
+	pub GrowthModule: *const c_void,	// 0x3c8
+	pub PamSkinModule: *const c_void,	// 0x3d0
+	pub GachaModule: *const c_void,	// 0x3d8
+	pub BattlePassModule: *const c_void,	// 0x3e0
+	pub ActivitySwordTrainingModule: *const c_void,	// 0x3e8
+	pub ActivityModule: *const c_void,	// 0x3f0
+	pub AnniversaryAvatarDeliverModule: *const c_void,	// 0x3f8
+	pub ActivityAetherDivideModule: *const c_void,	// 0x400
+	pub FarmModule: *const c_void,	// 0x408
+	pub MapConnectivityModule: *const c_void,	// 0x410
+	pub ShopModule: *const c_void,	// 0x418
+	pub RaidModule: *const c_void,	// 0x420
+	pub EraFlipperModule: *const c_void,	// 0x428
+	pub PersonalizeModule: *const c_void,	// 0x430
+	pub TitanAtlasModule: *const c_void,	// 0x438
+	pub FantasticStoryActivityModule: *const c_void,	// 0x440
+	pub RogueModule: *const c_void,	// 0x448
+	pub FriendModule: *const c_void,	// 0x450
+	pub PetModule: *const c_void,	// 0x458
+	pub TeamModule: *const c_void,	// 0x460
+	pub OfferingModule: *const c_void,	// 0x468
+	pub PunkLordModule: *const c_void,	// 0x470
+	pub MapPropOverrideConditionModule: *const c_void,	// 0x478
+	pub ItemComposeModule: *const c_void,	// 0x480
+	pub GamePlayLockModule: *const c_void,	// 0x488
+	pub MovieRacingModule: *const c_void,	// 0x490
+	pub RogueHandbookModule: *const c_void,	// 0x498
+	pub isInited: bool	// 0x4a0
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct TextID {
+	pub hash: i32,	// 0x0
+	pub hash64: u64	// 0x8
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct AvatarData {
+	pub native_object: NativeObject,
+	pub CombatPowerData__BackingField: *const c_void,	// 0x10
+	pub _SkillDataMap: *const c_void,	// 0x18
+	pub RelicsData__BackingField: *const c_void,	// 0x20
+	pub _TrialEquipment: *const c_void,	// 0x28
+	pub _ExtraPropertyAddition: *const c_void,	// 0x30
+	pub GrowUpBeforeData__BackingField: *const c_void,	// 0x38
+	pub _AvatarRowData: *const c_void,	// 0x40
+	pub UltraSkillConfig__BackingField: *const c_void,	// 0x48
+	pub PromotedBeforeData__BackingField: *const c_void,	// 0x50
+	pub SkillTreeData: *const c_void,	// 0x58
+	pub ServantData__BackingField: *const AvatarServantData,	// 0x60
+	pub LevelUpedBeforeData__BackingField: *const c_void,	// 0x68
+	pub AvatarPropertyData__BackingField: *const c_void,	// 0x70
+	pub HasTakenPromotionRewardList__BackingField: *const NativeArray<u32>,	// 0x78
+	pub _SkinIDList: *const NativeArray<u32>,	// 0x80
+	pub Row__BackingField: *const c_void,	// 0x88
+	pub SpecialRow__BackingField: *const c_void,	// 0x90
+	pub _AvatarName: *const NativeString,	// 0x98
+	pub FirstMetTimeStamp: u64,	// 0xa0
+	pub AvatarType__BackingField: i32,	// 0xa8
+	pub EquipmentUID__BackingField: u32,	// 0xac
+	pub Promotion__BackingField: u32,	// 0xb0
+	pub Level__BackingField: u32,	// 0xb4
+	pub CurrentExp__BackingField: u32,	// 0xb8
+	pub Rank__BackingField: u32,	// 0xbc
+	pub RealID__BackingField: u32,	// 0xc0
+	pub _BaseID: u32,	// 0xc4
+	pub _AdventurePlayerID: u32,	// 0xc8
+	pub IsDisplayOnly__BackingField: bool,	// 0xcc
+	pub IsMarked__BackingField: bool,	// 0xcd
+	pub IsNew__BackingField: bool,	// 0xce
+	pub DressedSkinID__BackingField: u32,	// 0xd0
+	pub SpecialAvatarID__BackingField: u32	// 0xd4
+}
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct AvatarServantData {
+	pub native_object: NativeObject,
+	pub _Json: *const c_void,	// 0x10
+	pub _ServantRowData: *const c_void,	// 0x18
+	pub _Row: *const c_void,	// 0x20
+	pub _SkillDataMap: *const c_void,	// 0x28
+	pub _AvatarData: *const AvatarData	// 0x30
 }
 	}
 }

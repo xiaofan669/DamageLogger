@@ -1,6 +1,6 @@
-
 use super::misc::{Avatar, Skill};
 
+#[allow(dead_code)]
 pub enum Event {
     OnBattleBegin,
     OnSetLineup(OnSetLineupEvent),
@@ -34,6 +34,7 @@ pub struct OnDamageEvent {
     pub damage: f64,
 }
 
+#[allow(dead_code)]
 pub struct OnKillEvent {
     pub attacker: Avatar,
 }

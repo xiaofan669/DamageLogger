@@ -16,4 +16,3 @@ macro_rules! subscribe_function {
 }
 
 pub mod battle;
-pub mod directx;

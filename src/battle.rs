@@ -158,23 +158,27 @@ impl BattleContext {
         else {
             battle_context.av_history.push(turn_info.clone());
         }
-        
+
         for (i, avatar) in battle_context.lineup.iter().enumerate() {
-            log::info!(
-                "Turn Summary: {} has dealt {:.2} damage",
-                avatar,
-                turn_info.avatars_turn_damage[i]
-            )
+            if turn_info.avatars_turn_damage[i] > 0.0 {
+                log::info!(
+                    "Turn Summary: {} has dealt {:.2} damage",
+                    avatar,
+                    turn_info.avatars_turn_damage[i]
+                );
+            }
         }
 
-        log::info!(
-            "Turn Summary: Total damage of {:.2}",
-            turn_info.total_damage
-        );
+        if turn_info.total_damage > 0.0 {
+            log::info!(
+                "Turn Summary: Total damage of {:.2}",
+                turn_info.total_damage
+            );
+        }
 
         let packet_body = EventPacket::TurnEnd {
             avatars: battle_context.lineup.clone(),
-            avatars_damage: turn_info.avatars_turn_damage,
+            avatars_damage: turn_info.avatars_turn_damage.clone(),
             total_damage: turn_info.total_damage,
             action_value: turn_info.action_value,
         };

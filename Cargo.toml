@@ -1,5 +1,5 @@
 [package]
-name = "astrolabe"
+name = "veritas"
 version = "0.1.0"
 edition = "2021"
 
@@ -15,24 +15,23 @@ anyhow = "1.0.97"
 log = "0.4"
 egui = "0.31.1"
 egui_plot = "0.31.0"
-egui-directx11 = { git = "https://github.com/hessiser/egui-directx.git", rev = "c73218d" }
+edio11 = { git = "https://github.com/hessiser/edio11-rs.git", rev = "8127440" }
+
 egui_logger = "0.6.3"
 function_name = "0.3.0"
 slog = "2.7.0"
 slog-term = "2.9.1"
-paste = "1.0.15"
-patternscan = "1.2.0"
 
 tokio = { version = "1.40.0", features = ["full"] }
 axum = { version = "0.7.5"  }
 axum-server = "0.7.1"
-tower-http = { version = "=0.6.1", features = ["cors"] }
+tower-http = { version = "=0.6.1", features = ["cors", "fs"] }
 futures-util = "0.3.31"
 include_dir = "0.7.4"
 mime_guess = "2.0.5"
 
 [dependencies.windows]
-version = "0.59.0"
+version = "0.60.0"
 features = [
     "Win32_Foundation",
     "Win32_System_LibraryLoader",
@@ -43,6 +42,5 @@ features = [
     "Win32_UI_WindowsAndMessaging",
     "Win32_Graphics_Direct3D",
     "Win32_Graphics_Dxgi_Common",
-    "Win32_Graphics_Direct3D11",
-    "Win32_System_ProcessStatus",
+    "Win32_Graphics_Direct3D11"
 ]

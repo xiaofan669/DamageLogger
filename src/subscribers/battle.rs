@@ -5,7 +5,7 @@ use crate::kreide::types::*;
 use crate::kreide::*;
 // use crate::kreide::types::rpg::client::*;
 use crate::kreide::functions::rpg::gamecore::*;
-// use crate::kreide::functions::rpg::client::*;
+use crate::kreide::functions::rpg::client::*;
 use crate::kreide::helpers::*;
 
 use crate::models::events::OnBattleEndEvent;
@@ -28,8 +28,8 @@ static_detour! {
         *const c_void,
         *const c_void,
         *const NOPBAAAGGLA,
-        *const c_void,
-        *const c_void,
+        *const TurnBasedAbilityComponent,
+        *const TurnBasedAbilityComponent,
         *const GameEntity,
         *const GameEntity,
         *const GameEntity,
@@ -64,8 +64,8 @@ fn on_damage(
     task_context: *const c_void,
     damage_by_attack_property: *const c_void,
     nopbaaaggla: *const NOPBAAAGGLA,
-    turn_based_ability_component_1: *const c_void,
-    turn_based_ability_component_2: *const c_void,
+    attacker_ability: *const TurnBasedAbilityComponent,
+    defender_ability: *const TurnBasedAbilityComponent,
     attacker: *const GameEntity,
     defender: *const GameEntity,
     attacker_task_single_target: *const GameEntity,
@@ -74,47 +74,19 @@ fn on_damage(
 ) -> bool {
     unsafe {
         log::debug!(function_name!());
-
-        // Check if attacker is null (can happen with servant post-damage)
-        if attacker.is_null() {
-            log::warn!("Attacker is null in on_damage, likely a servant post-damage event");
-            return ON_DAMAGE_Detour.call(
-                task_context,
-                damage_by_attack_property,
-                nopbaaaggla,
-                turn_based_ability_component_1,
-                turn_based_ability_component_2,
-                attacker,
-                defender,
-                attacker_task_single_target,
-                flag,
-                obkbghmgbne,
-            );
-        }
-
         let mut event: Option<Result<Event>> = None;
-
         match (*attacker)._Team {
             TeamType::TeamLight => {
                 let damage = fixpoint_to_raw(&(*nopbaaaggla).JFKEEOMKMLI);
-                let attack_owner = AbilityStatic_GetActualOwner(attacker);
-
-                // Check if attack_owner is null (can happen with servant post-damage)
-                if attack_owner.is_null() {
-                    log::warn!("Attack owner is null in on_damage, likely a servant post-damage event");
-                    return ON_DAMAGE_Detour.call(
-                        task_context,
-                        damage_by_attack_property,
-                        nopbaaaggla,
-                        turn_based_ability_component_1,
-                        turn_based_ability_component_2,
-                        attacker,
-                        defender,
-                        attacker_task_single_target,
-                        flag,
-                        obkbghmgbne,
-                    );
-                }
+                let attack_owner = {
+                    let attack_owner = AbilityStatic_GetActualOwner(attacker);
+                    if attack_owner.is_null() {
+                        attacker
+                    }
+                    else {
+                        attack_owner
+                    }
+                };
 
                 match (*attack_owner)._EntityType {
                     EntityType::Avatar => {
@@ -142,27 +114,42 @@ fn on_damage(
                             }
                         };
                         event = Some(e);
+                    },
+                    EntityType::Snapshot => {
+                        // Unsure if this is if only a servant died and inflicted a DOT
+                        let character_data_comp = (*attacker_ability)._CharacterDataRef;
+                        let summoner_entity = (*character_data_comp).Summoner;
+
+                        let e = match helpers::get_avatar_from_entity(summoner_entity) {
+                            Ok(avatar) => Ok(Event::OnDamage(OnDamageEvent {
+                                attacker: avatar,
+                                damage,
+                            })),
+                            Err(e) => {
+                                log::error!("Snapshot Event Error: {}", e);
+                                Err(anyhow!("{} Snapshot Event Error: {}", function_name!(), e))
+                            }
+                        };
+                        event = Some(e);
                     }
                     _ => log::warn!(
                         "Light entity type {} was not matched",
-                        (*attack_owner)._EntityType as usize
+                        (*attacker)._EntityType as usize
                     ),
                 }
             }
             _ => {}
         }
-
         if let Some(event) = event {
             BattleContext::handle_event(event);
         }
     }
-
     return ON_DAMAGE_Detour.call(
         task_context,
         damage_by_attack_property,
         nopbaaaggla,
-        turn_based_ability_component_1,
-        turn_based_ability_component_2,
+        attacker_ability,
+        defender_ability,
         attacker,
         defender,
         attacker_task_single_target,
@@ -183,7 +170,16 @@ fn on_use_skill(
     log::debug!(function_name!());
     unsafe {
         let entity = ((*instance)._parent_object)._OwnerRef;
-        let skill_owner = AbilityStatic_GetActualOwner(entity);
+        let skill_owner = {
+            let skill_owner = AbilityStatic_GetActualOwner(entity);
+            if skill_owner.is_null() {
+                entity
+            }
+            else {
+                skill_owner
+            }
+        };
+
         let mut event: Option<Result<Event>> = None;
         match (*skill_owner)._Team {
             TeamType::TeamLight => {
@@ -308,7 +304,15 @@ fn on_combo(instance: *const MMNDIEBMDNL) {
         let turn_based_ability_component = (*instance).FIMNOPAAFEP;
         let skill_character_component = (*instance).HECCDOHIAFD;
         let entity = (*skill_character_component)._parent_object._OwnerRef;
-        let skill_owner = AbilityStatic_GetActualOwner(entity);
+        let skill_owner = {
+            let skill_owner = AbilityStatic_GetActualOwner(entity);
+            if skill_owner.is_null() {
+                entity
+            }
+            else {
+                skill_owner
+            }
+        };
 
         let mut event: Option<Result<Event>> = None;
         match (*skill_owner)._Team {
@@ -510,40 +514,28 @@ fn on_turn_end(instance: *const c_void, a1: i32) -> *const c_void {
 pub fn subscribe() -> Result<()> {
     unsafe {
         subscribe_function!(
-            ON_DAMAGE_Detour,
-            *GAMEASSEMBLY_HANDLE + 0x7c1a410,
-            on_damage
-        );
-        subscribe_function!(ON_COMBO_Detour, *GAMEASSEMBLY_HANDLE + 0x7e103f0, on_combo);
-        subscribe_function!(
-            ON_USE_SKILL_Detour,
-            *GAMEASSEMBLY_HANDLE + 0x954c7f0,
-            on_use_skill
+            ON_DAMAGE_Detour, * GAMEASSEMBLY_HANDLE + 0x7c1a410, on_damage
         );
         subscribe_function!(
-            ON_SET_LINEUP_Detour,
-            *GAMEASSEMBLY_HANDLE + 0x7c76ca0,
-            on_set_lineup
+            ON_COMBO_Detour, * GAMEASSEMBLY_HANDLE + 0x7e103f0, on_combo
         );
         subscribe_function!(
-            ON_BATTLE_BEGIN_Detour,
-            *GAMEASSEMBLY_HANDLE + 0x99e4bd0,
-            on_battle_begin
+            ON_USE_SKILL_Detour, * GAMEASSEMBLY_HANDLE + 0x954c7f0, on_use_skill
         );
         subscribe_function!(
-            ON_BATTLE_END_Detour,
-            *GAMEASSEMBLY_HANDLE + 0x99e4ce0,
-            on_battle_end
+            ON_SET_LINEUP_Detour, * GAMEASSEMBLY_HANDLE + 0x7c76ca0, on_set_lineup
         );
         subscribe_function!(
-            ON_TURN_BEGIN_Detour,
-            *GAMEASSEMBLY_HANDLE + 0x99df450,
-            on_turn_begin
+            ON_BATTLE_BEGIN_Detour, * GAMEASSEMBLY_HANDLE + 0x99e4bd0, on_battle_begin
         );
         subscribe_function!(
-            ON_TURN_END_Detour,
-            *GAMEASSEMBLY_HANDLE + 0x9945760,
-            on_turn_end
+            ON_BATTLE_END_Detour, * GAMEASSEMBLY_HANDLE + 0x99e4ce0, on_battle_end
+        );
+        subscribe_function!(
+            ON_TURN_BEGIN_Detour, * GAMEASSEMBLY_HANDLE + 0x99df450, on_turn_begin
+        );
+        subscribe_function!(
+            ON_TURN_END_Detour, * GAMEASSEMBLY_HANDLE + 0x9945760, on_turn_end
         );
         Ok(())
     }

@@ -25,6 +25,15 @@ impl NativeString {
     }
 }
 
+impl Display for NativeString {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self.to_string() {
+            Ok(string) => write!(f, "{}", string),
+            Err(e) => write!(f, "{}", e),
+        }
+    }
+}
+
 #[repr(C, align(8))]
 #[derive(Debug, Clone, Copy)]
 pub struct NativeArray<T> {
@@ -33,15 +42,6 @@ pub struct NativeArray<T> {
     pub max_length: u32,
     // This is the first item of some pointer
     vector: *const T,
-}
-
-impl Display for NativeString {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self.to_string() {
-            Ok(string) => write!(f, "{}", string),
-            Err(e) => write!(f, "{}", e),
-        }
-    }
 }
 
 impl<T> NativeArray<T> {
