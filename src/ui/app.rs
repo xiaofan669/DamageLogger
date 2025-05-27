@@ -1,57 +1,62 @@
-use crate::kreide::functions::unityengine::Application_set_targetFrameRate;
-use crate::ui::widgets;
 use edio11::{input::InputResult, Overlay, WindowMessage, WindowProcessOptions};
-use egui::FontFamily::Proportional;
 use egui::Key;
+use egui::KeyboardShortcut;
+use egui::Label;
 use egui::Modifiers;
 use egui::Stroke;
-use egui::TextStyle::Body;
-use egui::TextStyle::Button;
-use egui::TextStyle::Heading;
-use egui::TextStyle::Monospace;
-use egui::TextStyle::Name;
-use egui::TextStyle::Small;
+use egui::TextEdit;
 use egui::{
     epaint::text::{FontInsert, InsertFontFamily},
-    CentralPanel, Color32, Context, FontId, Frame, Slider, Window,
+    CentralPanel, Color32, Context, Frame, Slider, Window,
 };
 use windows::Win32::{
     Foundation::{LPARAM, WPARAM},
     UI::{Input::KeyboardAndMouse::VK_MENU, WindowsAndMessaging::WM_KEYDOWN},
 };
 
-
 #[derive(Default, PartialEq)]
-pub enum Unit {
+pub enum GraphUnit {
     #[default]
     Turn,
     ActionValue,
 }
 
-pub struct Keybind {
-    pub key: egui::Key,
-    pub modifiers: Option<egui::Modifiers>,
-}
-
 #[derive(Default)]
 pub struct App {
-    pub menu_keybind: Option<Keybind>,
     pub show_menu: bool,
     pub show_console: bool,
-    fps: i32,
-    show_windows: bool,
     show_damage_distribution: bool,
     show_damage_bars: bool,
     show_real_time_damage: bool,
+    show_enemy_stats: bool,
     show_av_metrics: bool,
     widget_opacity: f32,
-    pub graph_x_unit: Unit,
-    pub text_scale: f32,
-    pub should_hide: bool
+    pub graph_x_unit: GraphUnit,
+    pub should_hide: bool,
+    streamer_mode: bool,
+    streamer_msg: String,
 }
+
+pub const HIDE_UI: KeyboardShortcut = KeyboardShortcut::new(Modifiers::COMMAND, Key::H);
+pub const SHOW_MENU: KeyboardShortcut = KeyboardShortcut::new(Modifiers::COMMAND, Key::M);
 
 impl Overlay for App {
     fn update(&mut self, ctx: &egui::Context) {
+        if ctx.input_mut(|i| i.consume_shortcut(&HIDE_UI)) {
+            self.should_hide = !self.should_hide;
+        }
+
+        if self.streamer_mode {
+            egui::TopBottomPanel::bottom("statusbar")
+                .resizable(true)
+                .show(ctx, |ui| {
+                    let label = Label::new(&self.streamer_msg).selectable(false);
+
+                    ui.add(label);
+                    ui.allocate_space(ui.available_size())
+                });
+        }
+
         if !self.should_hide {
             if self.show_menu {
                 CentralPanel::default()
@@ -59,76 +64,50 @@ impl Overlay for App {
                         fill: Color32::GRAY.gamma_multiply(0.25),
                         ..Default::default()
                     })
-                    .show(ctx, |ui: &mut egui::Ui| {
-                        Window::new("Overlay Menu")
+                    .show(ctx, |_ui: &mut egui::Ui| {
+                        Window::new(t!("Overlay Menu"))
                             .anchor(egui::Align2::CENTER_CENTER, [0.0, 0.0])
                             .resizable(false)
                             .show(ctx, |ui| {
                                 ui.vertical_centered(|ui| {
-                                    ui.heading("Widget Controls");
-    
-                                    ui.checkbox(&mut self.show_console, "Show Logs");
+                                    ui.heading(t!("Widget Controls"));
+
+                                    ui.checkbox(&mut self.streamer_mode, t!("Streamer Mode"));
+                                    ui.checkbox(&mut self.show_console, t!("Show Logs"));
                                     ui.checkbox(
                                         &mut self.show_damage_distribution,
-                                        "Show Damage Distribution",
+                                        t!("Show Damage Distribution"),
                                     );
-                                    ui.checkbox(&mut self.show_damage_bars, "Show Damage Bars");
+                                    ui.checkbox(&mut self.show_damage_bars, t!("Show Damage Bars"));
                                     ui.checkbox(
                                         &mut self.show_real_time_damage,
-                                        "Show Real-Time Damage",
+                                        t!("Show Real-Time Damage"),
                                     );
-                                    ui.checkbox(&mut self.show_av_metrics, "Show AV Metrics");
-    
-                                    ui.separator();
-                                    ui.label("Window Opacity");
-                                    ui.add(Slider::new(&mut self.widget_opacity, 0.0..=1.0).text(""));
-    
-                                    ui.separator();
-                                    ui.label("Text Size");
-                                    if ui
-                                        .add(Slider::new(&mut self.text_scale, 0.5..=3.0).text(""))
-                                        .changed()
-                                    {
-                                        ctx.style_mut(|style| {
-                                            let factor = self.text_scale;
-                                            style.text_styles = [
-                                                (Heading, FontId::new(factor * 30.0, Proportional)),
-                                                (
-                                                    Name("Heading2".into()),
-                                                    FontId::new(factor * 25.0, Proportional),
-                                                ),
-                                                (
-                                                    Name("Context".into()),
-                                                    FontId::new(factor * 23.0, Proportional),
-                                                ),
-                                                (Body, FontId::new(factor * 18.0, Proportional)),
-                                                (Monospace, FontId::new(factor * 14.0, Proportional)),
-                                                (Button, FontId::new(factor * 14.0, Proportional)),
-                                                (Small, FontId::new(factor * 10.0, Proportional)),
-                                            ]
-                                            .into();
-                                        });
-                                    }
+                                    ui.checkbox(&mut self.show_enemy_stats, t!("Show Enemy Stats"));
+
+                                    ui.checkbox(&mut self.show_av_metrics, t!("Show AV Metrics"));
 
                                     ui.separator();
-                                    ui.label("FPS");
-                                    if ui.add(Slider::new(&mut self.fps, 0..=300))
-                                        .changed()
-                                    {
-                                        Application_set_targetFrameRate(self.fps)
-                                    };
+                                    ui.label(t!("Window Opacity"));
+                                    ui.add(
+                                        Slider::new(&mut self.widget_opacity, 0.0..=1.0).text(""),
+                                    );
 
                                     ui.separator();
-                                    if ui.button("Close Menu").clicked() {
+                                    ui.label(t!("Streamer Message"));
+                                    ui.add(TextEdit::singleline(&mut self.streamer_msg));
+
+                                    ui.separator();
+                                    if ui.button(t!("Close Menu")).clicked() {
                                         self.show_menu = false;
                                     }
                                 });
                             });
                     });
             }
-    
+
             if self.show_console {
-                egui::Window::new("Log")
+                egui::Window::new(t!("Log"))
                     .resizable(true)
                     .default_height(300.0)
                     .default_width(400.0)
@@ -142,18 +121,21 @@ impl Overlay for App {
                         });
                     });
             }
-    
+
             let opacity = self.widget_opacity.clamp(0.0, 1.0);
             let window_frame = egui::Frame::new()
                 .fill(Color32::from_black_alpha((255.0 * opacity) as u8))
                 .stroke(Stroke::new(0.5, Color32::WHITE))
                 .inner_margin(8.0)
                 .corner_radius(10.0);
-    
-            let transparent_frame = egui::Frame::new().inner_margin(8.0);
-    
+
+            let transparent_frame = egui::Frame::new()
+                .stroke(Stroke::new(0.5, Color32::WHITE))
+                .inner_margin(8.0)
+                .corner_radius(10.0);
+
             if self.show_damage_distribution {
-                egui::containers::Window::new("Damage Distribution")
+                egui::containers::Window::new("")
                     .frame(transparent_frame)
                     .resizable(true)
                     .min_width(200.0)
@@ -162,9 +144,9 @@ impl Overlay for App {
                         self.show_damage_distribution_widget(ui);
                     });
             }
-    
+
             if self.show_damage_bars {
-                egui::containers::Window::new("Damage by Character")
+                egui::containers::Window::new(t!("Damage by Character"))
                     .frame(window_frame)
                     .resizable(true)
                     .min_width(200.0)
@@ -173,9 +155,9 @@ impl Overlay for App {
                         self.show_damage_bar_widget(ui);
                     });
             }
-    
+
             if self.show_real_time_damage {
-                egui::containers::Window::new("Real-Time Damage")
+                egui::containers::Window::new(t!("Real-Time Damage"))
                     .frame(window_frame)
                     .resizable(true)
                     .min_width(200.0)
@@ -184,9 +166,9 @@ impl Overlay for App {
                         self.show_real_time_damage_graph(ui);
                     });
             }
-    
+
             if self.show_av_metrics {
-                egui::containers::Window::new("Action Value Metrics")
+                egui::containers::Window::new(t!("Action Value Metrics"))
                     .frame(window_frame)
                     .resizable(true)
                     .min_width(200.0)
@@ -194,7 +176,18 @@ impl Overlay for App {
                     .show(ctx, |ui| {
                         self.show_av_metrics(ui);
                     });
-            }    
+            }
+
+            if self.show_enemy_stats {
+                egui::containers::Window::new(t!("Enemy Stats"))
+                    .frame(window_frame)
+                    .resizable(true)
+                    .min_width(200.0)
+                    .min_height(150.0)
+                    .show(ctx, |ui| {
+                        self.show_enemy_stats(ui);
+                    });
+            }
         }
     }
 
@@ -204,57 +197,49 @@ impl Overlay for App {
         input_events: &Vec<egui::Event>,
     ) -> Option<WindowProcessOptions> {
         // Refactor later
-        match input {
-            InputResult::Key => {
-                for e in input_events {
-                    match e {
-                        egui::Event::Key {
-                            key,
-                            physical_key: _,
-                            pressed,
-                            repeat: _,
-                            modifiers,
-                        } => {
-                            if let Some(menu_keybind) = &self.menu_keybind {
-                                if *key == menu_keybind.key && *pressed {
-                                    if let Some(keybind_modifiers) = menu_keybind.modifiers {
-                                        if modifiers.matches_exact(keybind_modifiers) {
-                                            self.show_menu = !self.show_menu;
-    
-                                            return Some(WindowProcessOptions {
-                                                // Simulate alt to get cursor
-                                                window_message: Some(WindowMessage {
-                                                    msg: WM_KEYDOWN,
-                                                    wparam: WPARAM(VK_MENU.0 as _),
-                                                    lparam: LPARAM(0),
-                                                }),
-                                                ..Default::default()
-                                            });
-                                        }
-                                    }
-                                }    
-                            }
+        if let InputResult::Key = input {
+            for e in input_events {
+                if let egui::Event::Key {
+                    key,
+                    physical_key: _,
+                    pressed,
+                    repeat: _,
+                    modifiers,
+                } = e
+                {
+                    if modifiers.matches_exact(SHOW_MENU.modifiers)
+                        && *key == SHOW_MENU.logical_key
+                        && *pressed
+                    {
+                        self.show_menu = !self.show_menu;
 
-                            if *key == Key::H && *pressed {
-                                if modifiers.matches_exact(Modifiers::CTRL) {
-                                    self.should_hide = !self.should_hide;
-                                }
-                            }
-                        }
-                        _ => {}
+                        return Some(WindowProcessOptions {
+                            // Simulate alt to get cursor
+                            window_message: Some(WindowMessage {
+                                msg: WM_KEYDOWN,
+                                wparam: WPARAM(VK_MENU.0 as _),
+                                lparam: LPARAM(0),
+                            }),
+                            ..Default::default()
+                        });
                     }
                 }
             }
-            _ => {}
         };
 
-        return Some(WindowProcessOptions::default());
+        if self.show_menu {
+            Some(WindowProcessOptions {
+                should_capture_all_input: true,
+                ..Default::default()
+            })
+        } else {
+            Some(WindowProcessOptions::default())
+        }
     }
 }
 
 impl App {
     pub fn new(ctx: Context) -> Self {
-        let text_scale = 1.25;
         let path = r"StarRail_Data\StreamingAssets\MiHoYoSDKRes\HttpServerResources\font\zh-cn.ttf";
         match std::fs::read(path) {
             Ok(font) => {
@@ -274,44 +259,17 @@ impl App {
                     ],
                 ));
             }
-            Err(e) => log::warn!(
-                "{} : Could not locate {}. Defaulting to default font.",
-                e,
-                path
-            ),
+            Err(e) => log::warn!("{e} : Could not locate {path}. Defaulting to default font."),
         }
 
         ctx.style_mut(|style| {
             style.visuals.widgets.noninteractive.fg_stroke.color = Color32::WHITE;
-            style.text_styles = [
-                (Heading, FontId::new(text_scale * 30.0, Proportional)),
-                (
-                    Name("Heading2".into()),
-                    FontId::new(text_scale * 25.0, Proportional),
-                ),
-                (
-                    Name("Context".into()),
-                    FontId::new(text_scale * 23.0, Proportional),
-                ),
-                (Body, FontId::new(text_scale * 18.0, Proportional)),
-                (Monospace, FontId::new(text_scale * 14.0, Proportional)),
-                (Button, FontId::new(text_scale * 14.0, Proportional)),
-                (Small, FontId::new(text_scale * 10.0, Proportional)),
-            ]
-            .into();
         });
 
-        let fps = 60;
-        Application_set_targetFrameRate(fps);
         Self {
             widget_opacity: 0.15,
-            text_scale,
-            fps,
+            streamer_mode: true,
             ..Default::default()
         }
-    }
-
-    pub fn set_menu_keybind(&mut self, key: egui::Key, modifiers: Option<egui::Modifiers>) {
-        self.menu_keybind = Some(Keybind { key, modifiers });
     }
 }

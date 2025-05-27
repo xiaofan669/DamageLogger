@@ -1,28 +1,52 @@
-use super::misc::{Avatar, Skill};
+use serde_json::Value;
 
-#[allow(dead_code)]
+use super::misc::{Avatar, Enemy, Entity, Skill, Stat, Team};
+
+#[allow(clippy::enum_variant_names)]
 pub enum Event {
-    OnBattleBegin,
-    OnSetLineup(OnSetLineupEvent),
+    OnBattleBegin(OnBattleBeginEvent),
+    OnSetBattleLineup(OnSetLineupEvent),
     OnDamage(OnDamageEvent),
     OnTurnBegin(OnTurnBeginEvent),
-    OnTurnEnd,
-    OnKill(OnKillEvent),
+    OnTurnEnd(OnTurnEndEvent),
     OnUseSkill(OnUseSkillEvent),
-    OnBattleEnd(OnBattleEndEvent),
+    OnBattleEnd,
+    OnUpdateWave(OnUpdateWaveEvent),
+    OnUpdateCycle(OnUpdateCycleEvent),
+    OnStatChange(OnStatChangeEvent),
+    OnEntityDefeated(OnEntityDefeatedEvent),
+    OnUpdateTeamFormation(OnUpdateTeamFormationEvent),
+    OnInitializeEnemy(OnInitializeEnemyEvent),
+}
+
+pub struct OnBattleBeginEvent {
+    pub max_waves: u32,
+    pub max_cycles: u32,
+    pub stage_id: u32,
+}
+
+pub struct OnUpdateWaveEvent {
+    pub wave: u32,
+}
+
+pub struct OnUpdateCycleEvent {
+    pub cycle: u32,
 }
 
 pub struct OnTurnBeginEvent {
-    pub action_value: f64
+    pub action_value: f64,
+    pub turn_owner: Option<Avatar>,
+    pub monster_hps: Vec<Value>,
+    pub extra_data: Value,
 }
 
-pub struct OnBattleEndEvent {
-    pub action_value: f64
+pub struct OnTurnEndEvent {
+    pub monster_hps: Vec<Value>,
 }
 
 pub struct OnUseSkillEvent {
     pub avatar: Avatar,
-    pub skill: Skill
+    pub skill: Skill,
 }
 
 pub struct OnSetLineupEvent {
@@ -32,9 +56,30 @@ pub struct OnSetLineupEvent {
 pub struct OnDamageEvent {
     pub attacker: Avatar,
     pub damage: f64,
+    pub damage_type: &'static str,
 }
 
-#[allow(dead_code)]
-pub struct OnKillEvent {
-    pub attacker: Avatar,
+pub struct OnEntityDefeatedEvent {
+    pub killer: Avatar,
+    pub entity_defeated: Avatar,
+}
+
+pub struct OnStatChangeEvent {
+    pub entity: Entity,
+    pub stat: Stat,
+}
+
+pub struct OnUpdateTeamFormationEvent {
+    pub entities: Vec<Entity>,
+    pub team: Team,
+}
+
+pub struct OnInitializeEnemyEvent {
+    pub enemy: Enemy,
+}
+
+impl PartialEq for Entity {
+    fn eq(&self, other: &Self) -> bool {
+        self.uid == other.uid
+    }
 }

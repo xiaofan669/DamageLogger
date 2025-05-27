@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Timeline</title>
+    <link rel="stylesheet" href="battle_timeline.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100vw;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .timeline-container {
+            display: block;
+            width: 100%;
+            max-width: 1600px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .back-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin-bottom: 20px;
+            align-self: flex-start;
+            margin-left: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+
+        .node.turn-owner {
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .node-owner-indicator {
+            font-size: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-bottom: 3px;
+        }
+
+        .node-no-damage {
+            font-size: 14px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .tooltip-owner {
+            font-weight: bold;
+            color: #ffcc00;
+            margin-bottom: 5px;
+        }
+
+        .tooltip-skills {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        .skills-used {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+
+<body>
+    <div style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 15px;">
+        <a href="https://space.bilibili.com/490578176" target="_blank"
+            style="color: red; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+            <svg width="28" height="28" viewBox="0 0 1024 1024" style="margin-right: 8px;">
+                <path fill="currentColor"
+                    d="M306.005333 117.632L444.330667 256h135.296l138.368-138.325333a42.666667 42.666667 0 0 1 60.373333 60.373333L700.330667 256H789.333333A149.333333 149.333333 0 0 1 938.666667 405.333333v341.333334a149.333333 149.333333 0 0 1-149.333334 149.333333h-554.666666A149.333333 149.333333 0 0 1 85.333333 746.666667v-341.333334A149.333333 149.333333 0 0 1 234.666667 256h88.96L245.632 177.962667a42.666667 42.666667 0 0 1 60.373333-60.373334zM789.333333 341.333333h-554.666666a64 64 0 0 0-63.701334 57.856L170.666667 405.333333v341.333334a64 64 0 0 0 57.856 63.701333L234.666667 810.666667h554.666666a64 64 0 0 0 63.701334-57.856L853.333333 746.666667v-341.333334A64 64 0 0 0 789.333333 341.333333zM341.333333 469.333333a42.666667 42.666667 0 0 1 42.666667 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666666-42.666667z m341.333334 0a42.666667 42.666667 0 0 1 42.666666 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666667-42.666667z">
+                </path>
+            </svg>
+            BiliBili: NuShen. Welcome to use HSR DamageLogger!(Click to pages)
+        </a>
+    </div>
+
+    <div id="timeline-container" class="timeline-container">
+        <div class="timeline-header">
+            <div class="timeline-title">Battle Timeline</div>
+            <div class="timeline-subtitle">Complete Battle Timeline with All Turns and Skills</div>
+        </div>
+        <div class="battle-info">
+            <div class="battle-info-item" id="max-cycles-info">Max Cycles: 0</div>
+            <div class="battle-info-item" id="max-waves-info">Max Waves: 0</div>
+            <div class="battle-info-item" id="cycle-info">Cycle: 0</div>
+            <div class="battle-info-item" id="wave-info">Wave: 0</div>
+            <div class="battle-info-item" id="turn-count">AllTurn: 0</div>
+            <div class="battle-info-item" id="stage-id-info">Stage ID: 0</div>
+        </div>
+        <div class="summary-box">
+            <div class="summary-title">Battle Character Summary</div>
+            <div id="summary-content" class="summary-content">
+            </div>
+        </div>
+
+        <div class="summary-box" id="enemy-summary-box" style="display:none; margin-top:20px;">
+            <div class="summary-title">Monster Information</div>
+            <div id="enemy-summary-content" class="summary-content"></div>
+        </div>
+
+        <div style="width: 100%; overflow: hidden; text-align: center;">
+            <div id="battle-flow" class="battle-flow">
+            </div>
+        </div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <script src="battle_timeline.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('timeline-container').style.display = 'block';
+            document.getElementById('battle-flow').innerHTML = '<div style="text-align: center; padding: 20px; width: 80%; max-width: 500px; background-color: rgba(0,0,0,0.03); border-radius: 10px; font-size: 16px; color: #555;">Waiting for battle data...<br>Start a battle to see the timeline.</div>';
+
+            if (window.BattleTimelineGenerator) {
+
+                window.BattleTimelineGenerator.startListening();
+
+                const battleDataStr = localStorage.getItem('lastBattleData');
+                if (battleDataStr) {
+                    try {
+                        const eventData = JSON.parse(battleDataStr);
+                        window.BattleTimelineGenerator.showBattleTimeline(eventData);
+                    } catch (e) {
+                        console.error('Failed to parse battle data:', e);
+                    }
+                }
+            } else {
+                document.getElementById('battle-flow').innerHTML = '<div style="text-align: center; padding: 20px; width: 80%; max-width: 500px; background-color: rgba(255,0,0,0.05); border-radius: 10px; font-size: 16px; color: #d32f2f;">Error: Timeline generator not available</div>';
+            }
+        });
+    </script>
+    <div style="text-align: center; margin-top: 30px; padding: 15px; font-size: 1rem;">
+        <a href="https://github.com/NuShen1337" target="_blank" style="color: #333; text-decoration: none;">
+            <svg height="24" width="24" viewBox="0 0 16 16" version="1.1"
+                style="vertical-align: middle; margin-right: 5px;">
+                <path fill-rule="evenodd"
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                </path>
+            </svg>
+            GitHub: NuShen1337
+        </a>
+    </div>
+</body>
+
+</html>

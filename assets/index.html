@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DamageLogger</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="battle_timeline.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -14,8 +16,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-			justify-content: flex-start;
-			min-height: 100vh;
+            justify-content: flex-start;
+            min-height: 100vh;
             padding: 20px 0;
             overflow-y: auto;
         }
@@ -59,7 +61,7 @@
         }
 
         .summary-title {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             margin-bottom: 15px;
             font-weight: 600;
             color: #fff;
@@ -75,6 +77,9 @@
             padding: 8px 10px;
             border-radius: 6px;
             transition: all 0.2s ease;
+            text-align: left;
+            font-weight: 500;
+            flex-grow: 0.7;
         }
 
         .attacker:hover {
@@ -89,25 +94,15 @@
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
         }
 
-        .attacker-name {
-            font-weight: 500;
-            flex-grow: 1;
-        }
-
-        .damage-stats {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            text-align: right;
-        }
-
         .damage-percentage {
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 0.7rem;
+            font-weight: 1000;
+            background-color: #ffffff00;
         }
 
         .damage-value {
-            font-size: 0.85rem;
+            font-weight: 600;
+            font-size: 0.8rem;
             opacity: 0.8;
         }
 
@@ -257,13 +252,33 @@
                 margin-bottom: 5px;
             }
         }
+
+        .timeline-button {
+            background-color: #ffffff00;
+            color: rgb(255, 0, 0);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 1.5rem;
+            transition: background-color 0.2s;
+        }
+
+        .timeline-button:hover {
+            background-color: #001aff;
+        }
     </style>
 </head>
+
 <body>
     <div style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 15px;">
-        <a href="https://space.bilibili.com/490578176" target="_blank" style="color: red; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+        <a href="https://space.bilibili.com/490578176" target="_blank"
+            style="color: red; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
             <svg width="28" height="28" viewBox="0 0 1024 1024" style="margin-right: 8px;">
-                <path fill="currentColor" d="M306.005333 117.632L444.330667 256h135.296l138.368-138.325333a42.666667 42.666667 0 0 1 60.373333 60.373333L700.330667 256H789.333333A149.333333 149.333333 0 0 1 938.666667 405.333333v341.333334a149.333333 149.333333 0 0 1-149.333334 149.333333h-554.666666A149.333333 149.333333 0 0 1 85.333333 746.666667v-341.333334A149.333333 149.333333 0 0 1 234.666667 256h88.96L245.632 177.962667a42.666667 42.666667 0 0 1 60.373333-60.373334zM789.333333 341.333333h-554.666666a64 64 0 0 0-63.701334 57.856L170.666667 405.333333v341.333334a64 64 0 0 0 57.856 63.701333L234.666667 810.666667h554.666666a64 64 0 0 0 63.701334-57.856L853.333333 746.666667v-341.333334A64 64 0 0 0 789.333333 341.333333zM341.333333 469.333333a42.666667 42.666667 0 0 1 42.666667 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666666-42.666667z m341.333334 0a42.666667 42.666667 0 0 1 42.666666 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666667-42.666667z"></path>
+                <path fill="currentColor"
+                    d="M306.005333 117.632L444.330667 256h135.296l138.368-138.325333a42.666667 42.666667 0 0 1 60.373333 60.373333L700.330667 256H789.333333A149.333333 149.333333 0 0 1 938.666667 405.333333v341.333334a149.333333 149.333333 0 0 1-149.333334 149.333333h-554.666666A149.333333 149.333333 0 0 1 85.333333 746.666667v-341.333334A149.333333 149.333333 0 0 1 234.666667 256h88.96L245.632 177.962667a42.666667 42.666667 0 0 1 60.373333-60.373334zM789.333333 341.333333h-554.666666a64 64 0 0 0-63.701334 57.856L170.666667 405.333333v341.333334a64 64 0 0 0 57.856 63.701333L234.666667 810.666667h554.666666a64 64 0 0 0 63.701334-57.856L853.333333 746.666667v-341.333334A64 64 0 0 0 789.333333 341.333333zM341.333333 469.333333a42.666667 42.666667 0 0 1 42.666667 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666666-42.666667z m341.333334 0a42.666667 42.666667 0 0 1 42.666666 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666667-42.666667z">
+                </path>
             </svg>
             BiliBili: NuShen. Welcome to use HSR DamageLogger!(Click to pages)
         </a>
@@ -289,6 +304,8 @@
             <div class="no-data">No Damage</div>
         </div>
     </div>
+
+
 
     <script>
         // Chart configuration
@@ -346,7 +363,7 @@
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 let label = context.label || '';
                                 if (label) {
                                     label += ': ';
@@ -404,7 +421,7 @@
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 const damage = Math.round(context.parsed.y);
                                 return `${damage.toLocaleString()} damage`;
                             }
@@ -418,7 +435,7 @@
                             color: 'rgba(255, 255, 255, 0.1)'
                         },
                         ticks: {
-                            callback: function(value) {
+                            callback: function (value) {
                                 return Math.round(value).toLocaleString();
                             }
                         }
@@ -433,7 +450,7 @@
         });
 
         // SSE connection
-        const source = new EventSource('http://localhost:21500/events');
+        const source = new EventSource('http://localhost:1305/events');
         const damageData = new Map();
         const colorMap = new Map();
         const damageHistory = [];
@@ -533,16 +550,14 @@
                 const percentage = totalDamage > 0 ? ((damage / totalDamage) * 100).toFixed(1) : 0;
                 const color = colorMap.get(attacker);
 
-                const damageDisplay = damage > 0 ? `${Math.round(damage).toLocaleString()} dmg` : '0 dmg';
+                const damageDisplay = damage > 0 ? `${Math.round(damage).toLocaleString()}` : '0';
 
                 summaryHTML += `
                     <div class="attacker">
                         <span class="color-dot" style="background-color: ${color}"></span>
-                        <span class="attacker-name">${attacker}</span>
-                        <div class="damage-stats">
-                            <span class="damage-percentage">${percentage}%</span>
-                            <span class="damage-value">${damageDisplay}</span>
-                        </div>
+                        <span class="attacker">${attacker}</span>
+                        <span class="damage-value">${damageDisplay}</span>
+                        <span class="damage-percentage">${percentage}%</span>
                     </div>
                 `;
             });
@@ -553,11 +568,11 @@
         // Flag to track if battle has ended
         let battleEnded = false;
 
-        source.onmessage = function(event) {
+        source.onmessage = function (event) {
             const eventData = JSON.parse(event.data);
 
             // Get Lineup
-            if (eventData.type === 'SetBattleLineup') {
+            if (eventData.type === 'OnSetBattleLineup') {
                 const avatars = eventData.data.avatars;
 
                 if (battleEnded || avatars.length > 4) {
@@ -570,16 +585,13 @@
                     battleEnded = false;
                 }
 
-                // Initialize all players with zero damage
                 avatars.forEach((avatar, index) => {
                     const playerName = avatar.name;
 
-                    // Assign color to each player
                     if (!colorMap.has(playerName)) {
                         colorMap.set(playerName, colors[index % colors.length]);
                     }
 
-                    // Initialize with zero damage
                     if (!damageData.has(playerName)) {
                         damageData.set(playerName, 0);
                     }
@@ -591,13 +603,13 @@
                 const backgroundColors = labels.map(k => colorMap.get(k));
                 const borderColors = backgroundColors.map(color => color.replace('0.85', '1'));
 
-                // Update pie chart
+                // Update pie
                 damageChart.data.labels = labels;
                 damageChart.data.datasets[0].data = data;
                 damageChart.data.datasets[0].backgroundColor = backgroundColors;
                 damageChart.update();
 
-                // Update bar chart
+                // Update bar
                 damageBarChart.data.labels = labels;
                 damageBarChart.data.datasets[0].data = data;
                 damageBarChart.data.datasets[0].backgroundColor = backgroundColors;
@@ -608,18 +620,16 @@
                 updateSummaryBox();
             }
 
-            // Handle turn begin event
-            else if (eventData.type === 'TurnBegin') {
-                // Increment turn counter
+            else if (eventData.type === 'OnTurnBegin') {
                 currentTurn++;
                 console.log(`Turn ${currentTurn} begins`);
             }
 
             // Handle turn end event
-            else if (eventData.type === 'TurnEnd') {
+            else if (eventData.type === 'OnTurnEnd') {
                 console.log(`Turn ${currentTurn} ends with data:`, eventData.data);
                 const avatars = eventData.data.avatars;
-                const avatarsDamage = eventData.data.avatars_damage;
+                const avatarsDamage = eventData.data.turn_info.avatars_turn_damage;
 
                 currentTurnDamage.clear();
 
@@ -645,7 +655,6 @@
 
                 console.log(`Damage event: ${attacker} dealt ${damage} damage`);
 
-                // Assign color if new attacker (shouldn't happen normally since lineup is initialized)
                 if (!colorMap.has(attacker)) {
                     colorMap.set(attacker, colors[colorMap.size % colors.length]);
                 }
@@ -663,25 +672,24 @@
                 const backgroundColors = labels.map(k => colorMap.get(k));
                 const borderColors = backgroundColors.map(color => color.replace('0.85', '1'));
 
-                // Update pie chart
+                // Update pie
                 damageChart.data.labels = labels;
                 damageChart.data.datasets[0].data = data;
                 damageChart.data.datasets[0].backgroundColor = backgroundColors;
                 damageChart.update();
 
-                // Update bar chart
+                // Update bar
                 damageBarChart.data.labels = labels;
                 damageBarChart.data.datasets[0].data = data;
                 damageBarChart.data.datasets[0].backgroundColor = backgroundColors;
                 damageBarChart.data.datasets[0].borderColor = borderColors;
                 damageBarChart.update();
 
-                // Update summary box
                 updateSummaryBox();
             }
 
             // Handle battle end event
-            else if (eventData.type === 'BattleEnd') {
+            else if (eventData.type === 'OnBattleEnd') {
                 console.log('Battle ended with data:', eventData.data);
 
                 if (currentTurnDamage.size > 0) {
@@ -695,31 +703,49 @@
                 const summaryContent = document.getElementById('summaryContent');
                 const finalStatsHeader = document.createElement('div');
                 finalStatsHeader.className = 'summary-title';
-                finalStatsHeader.style.marginTop = '15px';
-                finalStatsHeader.style.color = '#ffcc00';
-                finalStatsHeader.textContent = 'BattleEnded - Final Damage';
+
+                // check battle
+                const viewTimelineButton = document.createElement('button');
+                viewTimelineButton.className = 'timeline-button';
+                viewTimelineButton.textContent = 'Battle Ended';
+                viewTimelineButton.style.marginLeft = '10px';
+                viewTimelineButton.style.marginTop = '0';
+                viewTimelineButton.onclick = function () {
+                    localStorage.setItem('lastBattleData', JSON.stringify(eventData));
+                    window.open('/battle_timeline', '_blank');
+                };
+
+                finalStatsHeader.appendChild(viewTimelineButton);
 
                 if (summaryContent.firstChild) {
                     summaryContent.insertBefore(finalStatsHeader, summaryContent.firstChild);
                 }
 
                 console.log('Final damage history:', damageHistory);
+
+                // save battledata
+                localStorage.setItem('lastBattleData', JSON.stringify(eventData));
             }
         };
 
-        source.onerror = function() {
+        source.onerror = function () {
             console.error('SSE connection error');
             const summaryContent = document.getElementById('summaryContent');
             summaryContent.innerHTML = '<div class="no-data">Connection error. Please refresh the page.</div>';
         };
     </script>
-        <div style="text-align: center; margin-top: 30px; padding: 15px; font-size: 1rem;">
-            <a href="https://github.com/NuShen1337" target="_blank" style="color: #333; text-decoration: none;">
-                <svg height="24" width="24" viewBox="0 0 16 16" version="1.1" style="vertical-align: middle; margin-right: 5px;">
-                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-                </svg>
-                GitHub: NuShen1337
-            </a>
-        </div>
+    <script src="battle_timeline.js"></script>
+    <div style="text-align: center; margin-top: 30px; padding: 15px; font-size: 1rem;">
+        <a href="https://github.com/NuShen1337" target="_blank" style="color: #333; text-decoration: none;">
+            <svg height="24" width="24" viewBox="0 0 16 16" version="1.1"
+                style="vertical-align: middle; margin-right: 5px;">
+                <path fill-rule="evenodd"
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                </path>
+            </svg>
+            GitHub: NuShen1337
+        </a>
+    </div>
 </body>
+
 </html>

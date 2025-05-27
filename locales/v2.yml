@@ -1,0 +1,70 @@
+1jU7hqlJ0ltf:
+  en: Close Menu
+  zh-cn: 关闭菜单
+1kGvcl5IPAhw:
+  en: Show Real-Time Damage
+  zh-cn: 显示实时伤害情况
+2B96nzZHnFPZ:
+  en: Show Damage Distribution
+  zh-cn: 显示伤害分布
+2GmyOmLjedCr:
+  en: Show AV Metrics
+  zh-cn: 显示行动值指标
+2PNk8PmLFdHE:
+  en: Overlay Menu
+  zh-cn: 叠加菜单
+2cuU8okyUVvn:
+  en: Action Value Metrics
+  zh-cn: 行动值指标
+2g5xqM9780Le:
+  en: Show Damage Bars
+  zh-cn: 显示损伤条
+2jHXQAOdg4Nm:
+  en: Action Value
+  zh-cn: 行动值
+3B7dFIywsIA4:
+  en: Streamer Message
+  zh-cn: 流媒体信息
+3vmghpOiotac:
+  en: Widget Controls
+  zh-cn: 小部件控制
+42SBVEsAhN12:
+  en: 'Total Damage:'
+  zh-cn: '总伤害:'
+42qqOY5a5AQ1:
+  en: Window Opacity
+  zh-cn: 窗口不透明度
+4dwgNbiO1HqM:
+  en: Damage by Character
+  zh-cn: 角色伤害
+4fO2Pqxp9TxK:
+  en: Current Turn
+  zh-cn: 当前回合
+6Bzv9dbJvO1b:
+  en: 'Total Elapsed AV:'
+  zh-cn: '总耗时行动值:'
+6vLZL7YqEuRH:
+  en: Real-Time Damage
+  zh-cn: 实时伤害
+6yQK18w1rjwi:
+  en: Show Logs
+  zh-cn: 显示日志
+7azkmE7n7RQb:
+  en: Streamer Mode
+  zh-cn: 流媒体模式
+'AV:':
+  en: 'AV:'
+  zh-cn: '行动值:'
+Damage:
+  en: Damage
+  zh-cn: 伤害
+'DpAV:':
+  en: 'DpAV:'
+  zh-cn: '损伤/行动值:'
+Log:
+  en: Log
+  zh-cn: 日志
+Turn:
+  en: Turn
+  zh-cn: 回合
+_version: 2

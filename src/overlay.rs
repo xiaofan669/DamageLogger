@@ -5,7 +5,7 @@ use std::{
     ptr::null_mut,
 };
 use windows::{
-    core::{w, Interface},
+    core::{w, Interface, HRESULT},
     Win32::{
         Foundation::HMODULE,
         Graphics::{
@@ -43,7 +43,15 @@ pub fn get_vtable() -> Box<[usize; 205]> {
         let window_class = WNDCLASSEXW {
             cbSize: mem::size_of::<WNDCLASSEXW>() as _,
             style: CS_HREDRAW | CS_VREDRAW,
-            lpfnWndProc: Some(mem::transmute(DefWindowProcW as *const c_void)),
+            lpfnWndProc: Some(mem::transmute::<
+                *const std::ffi::c_void,
+                unsafe extern "system" fn(
+                    windows::Win32::Foundation::HWND,
+                    u32,
+                    windows::Win32::Foundation::WPARAM,
+                    windows::Win32::Foundation::LPARAM,
+                ) -> windows::Win32::Foundation::LRESULT,
+            >(DefWindowProcW as *const c_void)),
             lpszClassName: w!("veritas"),
             ..Default::default()
         };
@@ -128,7 +136,12 @@ pub fn get_vtable() -> Box<[usize; 205]> {
         let context_ptr = &context.unwrap();
         let context_vtable = Interface::vtable(context_ptr);
 
-        std::ptr::copy_nonoverlapping(mem::transmute(swap_chain_vtable), vtable.as_mut_ptr(), 18);
+        std::ptr::copy_nonoverlapping(
+            swap_chain_vtable as *const windows::Win32::Graphics::Dxgi::IDXGISwapChain_Vtbl
+                as *const usize,
+            vtable.as_mut_ptr(),
+            18,
+        );
 
         std::ptr::copy_nonoverlapping(
             mem::transmute(&device_vtable),
@@ -137,7 +150,8 @@ pub fn get_vtable() -> Box<[usize; 205]> {
         );
 
         std::ptr::copy_nonoverlapping(
-            mem::transmute(context_vtable),
+            context_vtable as *const windows::Win32::Graphics::Direct3D11::ID3D11DeviceContext_Vtbl
+                as *const usize,
             vtable[18 + 43..].as_mut_ptr(),
             144,
         );
@@ -152,19 +166,27 @@ pub fn get_vtable() -> Box<[usize; 205]> {
 pub fn initialize() -> Result<()> {
     let vtable = get_vtable();
     unsafe {
-        edio11::set_overlay(
-            Box::new(|ctx| {
-                let mut app = App::new(ctx);
-                app.set_menu_keybind(
-                    egui::Key::M,
-                    Some(egui::Modifiers::CTRL),
-                );
-                Box::new(app)
-            }),
-            mem::transmute(vtable[8]),
-            mem::transmute(vtable[13]),
-        )
-        .unwrap();
+        Ok(edio11::set_overlay(
+            Box::new(|ctx| Box::new(App::new(ctx))),
+            mem::transmute::<
+                usize,
+                fn(
+                    *const windows::Win32::Graphics::Dxgi::IDXGISwapChain_Vtbl,
+                    u32,
+                    windows::Win32::Graphics::Dxgi::DXGI_PRESENT,
+                ) -> HRESULT,
+            >(vtable[8]),
+            mem::transmute::<
+                usize,
+                fn(
+                    *const windows::Win32::Graphics::Dxgi::IDXGISwapChain_Vtbl,
+                    u32,
+                    u32,
+                    u32,
+                    windows::Win32::Graphics::Dxgi::Common::DXGI_FORMAT,
+                    u32,
+                ) -> HRESULT,
+            >(vtable[13]),
+        )?)
     }
-    Ok(())
 }

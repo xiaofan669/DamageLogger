@@ -1,27 +1,49 @@
-use anyhow::{Context, Result};
 use axum::{
-    response::{sse::Sse, Html, IntoResponse},
+    response::{IntoResponse, Sse},
     routing::get,
     Router,
 };
-use socket_manager::get_instance;
-use std::net::SocketAddr;
-use tokio::{runtime::Runtime, time::Duration};
+use axum_embed::ServeEmbed;
+use futures_util::stream::{self, Stream};
+use rust_embed::RustEmbed;
+use serde_json::json;
+use socketioxide::{extract::SocketRef, SocketIo};
+use std::{
+    net::SocketAddr,
+    str::FromStr,
+    sync::{LazyLock, OnceLock},
+};
+use tokio::{runtime::Runtime, sync::broadcast::Sender};
 use tower_http::cors::{Any, CorsLayer};
 
 use crate::models::packets::Packet;
 
-mod socket_manager;
+const SERVER_ADDR: &str = "127.0.0.1:1305";
 
-const SERVER_ADDR: &str = "127.0.0.1:21500";
+static SOCKET_IO: OnceLock<SocketIo> = OnceLock::new();
+static RUNTIME: LazyLock<Runtime> =
+    LazyLock::new(|| Runtime::new().expect("Failed to create Tokio runtime"));
+static TX: LazyLock<Sender<Packet>> = LazyLock::new(|| {
+    let (tx, _) = tokio::sync::broadcast::channel(100);
+    tx
+});
 
-pub fn start_server() -> Result<()> {
-    let rt = Runtime::new().context("Failed to create Tokio runtime")?;
+#[derive(RustEmbed, Clone)]
+#[folder = "assets/"]
+struct Assets;
 
-    rt.block_on(async {
+pub fn start_server() {
+    RUNTIME.block_on(async {
+        let (socket_io_layer, io) = SocketIo::new_layer();
+        io.ns("/", on_connect);
+        SOCKET_IO.set(io).unwrap();
+
+        let static_assets_layer = ServeEmbed::<Assets>::new();
+
         let app = Router::new()
-            .route("/", get(root_handler))
             .route("/events", get(sse_handler))
+            .nest_service("/static", static_assets_layer)
+            .layer(socket_io_layer)
             .layer(
                 CorsLayer::new()
                     .allow_origin(Any)
@@ -29,36 +51,55 @@ pub fn start_server() -> Result<()> {
                     .allow_headers(Any),
             );
 
-        let addr: SocketAddr = SERVER_ADDR.parse().expect("Invalid server address");
-
-        log::info!("Server running on http://{}", addr);
-        if let Err(e) = axum_server::bind(addr)
+        // HTTP
+        axum_server::bind(SocketAddr::from_str(SERVER_ADDR).unwrap())
             .serve(app.into_make_service())
             .await
-            .context("Failed to start server")
-        {
-            log::error!("Server error: {:?}", e);
-        }
+            .expect("Failed to start server");
     });
-
-    Ok(())
 }
 
 async fn sse_handler() -> impl IntoResponse {
-    let socket_manager = get_instance();
-    let socket_manager = socket_manager.lock().unwrap().clone();
-    Sse::new(socket_manager.subscribe()).keep_alive(
-        axum::response::sse::KeepAlive::new()
-            .interval(Duration::from_secs(1))
-            .text("ping"),
-    )
+    fn subscribe() -> impl Stream<Item = Result<axum::response::sse::Event, anyhow::Error>> {
+        let rx = TX.subscribe();
+        stream::unfold(rx, |mut rx| async move {
+            match rx.recv().await {
+                Ok(data) => Some((
+                    Ok(axum::response::sse::Event::default()
+                        .json_data(json!({
+                            "type": data.name(),
+                            "data": data.payload()
+                        }))
+                        .unwrap()),
+                    rx,
+                )),
+                Err(_) => None,
+            }
+        })
+    }
+
+    Sse::new(subscribe())
 }
 
-async fn root_handler() -> impl IntoResponse {
-    Html(include_str!("./server/index.html"))
+fn on_connect(socket: SocketRef) {
+    let packet = Packet::Connected {
+        version: env!("TARGET_BUILD").to_string(),
+    };
+    socket.emit(packet.name(), &packet.payload()).ok();
 }
 
 pub fn broadcast(packet: Packet) {
-    let socket_manager = get_instance();
-    let _ = socket_manager.lock().unwrap().broadcast_packet(packet);
+    RUNTIME.spawn(async move {
+        let io = SOCKET_IO.get().unwrap();
+        io.broadcast()
+            .emit(&packet.name(), &packet.payload())
+            .await
+            .unwrap();
+
+        if packet.name() == "OnStatChange" {
+            return;
+        }
+
+        let _ = TX.send(packet);
+    });
 }

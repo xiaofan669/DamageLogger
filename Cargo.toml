@@ -1,7 +1,22 @@
 [package]
-name = "veritas"
-version = "0.1.0"
+name = "Astrolabe"
 edition = "2021"
+license-file = "LICENSE"
+repository = "https://github.com/hessiser/veritas/"
+
+[package.metadata]
+region = "global"
+is_beta = true
+patch = "3.2.3"
+hotfix = "0.4"
+
+[package.metadata.i18n]
+available-locales = ["en", "zh-cn"]
+default-locale = "en"
+load-path = "locales"
+minify-key = true
+minify-key-len = 12
+minify-key-thresh = 8
 
 [lib]
 crate-type = ["cdylib"]
@@ -12,23 +27,33 @@ ctor = "0.4.1"
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 anyhow = "1.0.97"
-log = "0.4"
-egui = "0.31.1"
-egui_plot = "0.31.0"
-edio11 = { git = "https://github.com/hessiser/edio11-rs.git", rev = "8127440" }
-
-egui_logger = "0.6.3"
 function_name = "0.3.0"
+rust-i18n = "3.1.4"
+paste = "1.0.15"
+patternscan = "1.2.0"
+microseh = "1.1"
+
+# UI
+egui = "0.31.1"
+egui_plot = "0.32.1"
+edio11 = { git = "https://github.com/hessiser/edio11-rs.git", rev = "c9f509f" }
+
+# Logging
+log = "0.4"
 slog = "2.7.0"
 slog-term = "2.9.1"
+egui_logger = "0.6.3"
 
-tokio = { version = "1.40.0", features = ["full"] }
-axum = { version = "0.7.5"  }
-axum-server = "0.7.1"
-tower-http = { version = "=0.6.1", features = ["cors", "fs"] }
+# Server
+axum = { version = "0.8.4" }
+axum-server = "0.7.2"
+socketioxide = "0.17.0"
+tokio = { version = "1.45.0", features = ["full"] }
+tower = "0.5.2"
+tower-http = { version = "0.6.3", features = ["cors"] }
+rust-embed = "8.7.2"
+axum-embed = "0.1.0"
 futures-util = "0.3.31"
-include_dir = "0.7.4"
-mime_guess = "2.0.5"
 
 [dependencies.windows]
 version = "0.60.0"
@@ -42,5 +67,13 @@ features = [
     "Win32_UI_WindowsAndMessaging",
     "Win32_Graphics_Direct3D",
     "Win32_Graphics_Dxgi_Common",
-    "Win32_Graphics_Direct3D11"
+    "Win32_Graphics_Direct3D11",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_System_ProcessStatus",
 ]
+
+[build-dependencies]
+cargo_metadata = "0.19.2"
+regex = "1.11.1"
+toml_edit = "0.22.25"
+winres = "0.1.12"
